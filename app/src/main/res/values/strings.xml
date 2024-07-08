@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Chat App</string>
+    <string name="login_google_desc">login_google_desc</string>
+    <string name="login_facebook_desc">login_facebook_desc</string>
+    <string name="Email_address_input_field">Email address input field</string>
+    <string name="Password_input_field">Password input field</string>
+
+
 </resources>
