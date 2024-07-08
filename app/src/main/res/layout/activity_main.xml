@@ -92,7 +92,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/button_shape"
-        android:text="Đăng ký với mail"
+        android:text="Đăng ký với Email"
         android:backgroundTint="@color/backgroundColor"
         android:layout_marginHorizontal="20dp"
         android:textSize="22sp" />
