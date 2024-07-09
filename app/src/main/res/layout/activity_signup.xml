@@ -159,6 +159,7 @@
         android:background="@drawable/button_shape"
         android:text="Đăng ký"
         android:textSize="22sp"
+        android:paddingVertical="14dp"
         app:layout_constraintBottom_toTopOf="@+id/forgotPass"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

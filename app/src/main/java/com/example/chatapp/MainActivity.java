@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -36,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Các nút khác bạn có thể setup tại đây
     }
 
     private void navigateToActivity(Class<?> activityClass) {

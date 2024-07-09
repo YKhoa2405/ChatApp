@@ -2,6 +2,7 @@ package com.example.chatapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -48,6 +49,9 @@ public class SignupActivity extends AppCompatActivity {
 
                 if(user.isEmpty()){
                     edtEmail.setError("Email không được để trống");
+                }
+                if (!Patterns.EMAIL_ADDRESS.matcher(user).matches()) {
+                    edtEmail.setError("Định dạng Email không hợp lệ");
                 }
                 if(pass.isEmpty()){
                     edtPass.setError("Mật khẩu không được để trống");
