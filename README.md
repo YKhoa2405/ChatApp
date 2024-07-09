@@ -9,3 +9,6 @@ Link Firebase : https://console.firebase.google.com/u/1/project/chatapp-d7795/ov
 Email:nykhoa2405@gmail.com
 
 Pass:Caichyrua11@
+
+Yêu cầu: https://lms.ou.edu.vn/233/pluginfile.php/21002/mod_resource/content/1/DeTaiMobile.pdf
+
