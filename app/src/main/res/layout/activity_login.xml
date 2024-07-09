@@ -60,21 +60,10 @@
             android:layout_height="50dp"
             android:layout_margin="15dp"
             android:background="@android:color/transparent"
-            android:contentDescription="@string/login_google_desc"
             android:padding="8dp"
             android:scaleType="fitCenter"
             app:srcCompat="@drawable/google" />
 
-        <ImageButton
-            android:id="@+id/loginFacebook"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_margin="15dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/login_facebook_desc"
-            android:padding="8dp"
-            android:scaleType="fitCenter"
-            app:srcCompat="@drawable/facebook" />
     </LinearLayout>
 
     <LinearLayout

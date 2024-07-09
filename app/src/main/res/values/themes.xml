@@ -6,4 +6,32 @@
     </style>
 
     <style name="Theme.ChatApp" parent="Base.Theme.ChatApp" />
+
+    <style name="errorToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">#fff</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">#ff5e65</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">#fff</item>
+        <item name="stIconStart">@drawable/toast_error_icon</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">top</item> top or center
+        <item name="stRadius">5dp</item>
+    </style>
+
+    <style name="successToast">
+        <item name="stTextBold">true</item>
+        <item name="stTextColor">#fff</item>
+        <item name="stTextSize">14sp</item>
+        <item name="stColorBackground">#53c379</item>
+        <item name="stSolidBackground">true</item>
+        <item name="stStrokeWidth">3dp</item>
+        <item name="stStrokeColor">#fff</item>
+        <item name="stIconStart">@drawable/toast_success_icon</item>
+        <item name="stLength">SHORT</item> LONG or SHORT
+        <item name="stGravity">top</item> top or center
+        <item name="stRadius">5dp</item>
+    </style>
 </resources>

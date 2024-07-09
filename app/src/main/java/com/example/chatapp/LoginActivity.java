@@ -8,31 +8,40 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
 
 import java.util.regex.Pattern;
 
+import io.github.muddz.styleabletoast.StyleableToast;
+
 public class LoginActivity extends AppCompatActivity {
 
+    private static final int RC_SIGN_IN = 9001;
+    private GoogleSignInClient googleSignInClient;
     private FirebaseAuth auth;
     private EditText edtEmail,edtPass;
     private Button btnLogin;
-    private ImageButton loginGoogle,loginFacebook,btnGoBack;
+    private ImageButton loginGoogle,btnGoBack;
     private TextView forgotPass;
+
 
 
     @Override
@@ -47,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLogin = findViewById(R.id.btnLogin);
         btnGoBack = findViewById(R.id.btnGoBack);
         forgotPass = findViewById(R.id.forgotPass);
+        loginGoogle = findViewById(R.id.loginGoogle);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -55,21 +65,23 @@ public class LoginActivity extends AppCompatActivity {
                 String pass = edtPass.getText().toString().trim(); // Sửa lại tên biến nếu cần
 
                 if (email.isEmpty()) {
-                    edtEmail.setError("Vui lòng nhập Email");
+                    StyleableToast.makeText(LoginActivity.this, "Vui lòng nhập Email", R.style.errorToast).show();
+
                 } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-                    edtEmail.setError("Email không hợp lệ");
+                    StyleableToast.makeText(LoginActivity.this, "Định dạng Email không chính xác", R.style.errorToast).show();
+
                 } else if (pass.isEmpty()) {
-                    edtPass.setError("Vui lòng nhập mật khẩu");
+                    StyleableToast.makeText(LoginActivity.this, "Vui lòng nhập mật khẩu", R.style.errorToast).show();
                 } else {
                     auth.signInWithEmailAndPassword(email, pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            Toast.makeText(LoginActivity.this, "Đăng nhập thành công", Toast.LENGTH_SHORT).show();
+                            StyleableToast.makeText(LoginActivity.this, "Đăng nhập thành công", R.style.successToast).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(LoginActivity.this, "Đăng nhập thất bại: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            StyleableToast.makeText(LoginActivity.this, "Email hoặc mật khẩu không chính xác", R.style.errorToast).show();
                         }
                     });
                 }
@@ -90,5 +102,62 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+//        Login google
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.client_id))
+                .requestEmail()
+                .build();
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        loginGoogle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                signIn();
+            }
+        });
+
+    }
+
+    private void signIn() {
+        Intent signInIntent = googleSignInClient.getSignInIntent();
+        startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Result returned from launching the Intent from GoogleSignInClient.getSignInIntent(...);
+        if (requestCode == RC_SIGN_IN) {
+            try {
+                // The Task returned from this call is always completed, no need to attach
+                // a listener.
+                GoogleSignInAccount account = GoogleSignIn.getSignedInAccountFromIntent(data).getResult(ApiException.class);
+                // Google Sign In was successful, authenticate with Firebase
+                firebaseAuthWithGoogle(account.getIdToken());
+            } catch (ApiException e) {
+                // Google Sign In failed, update UI appropriately
+                Log.w("MainActivity", "Google sign in failed", e);
+            }
+        }
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        auth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        StyleableToast.makeText(LoginActivity.this, "Đăng nhập thành công", R.style.successToast).show();
+                        // Sign in success, update UI with the signed-in user's information
+                        FirebaseUser user = auth.getCurrentUser();
+                        // Update UI or start a new activity
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        StyleableToast.makeText(LoginActivity.this, "Đăng nhập thất bại", R.style.errorToast).show();
+
+
+                    }
+                });
     }
 }

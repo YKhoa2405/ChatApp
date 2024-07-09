@@ -21,6 +21,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 
+import io.github.muddz.styleabletoast.StyleableToast;
+
 public class SignupActivity extends AppCompatActivity {
     private FirebaseAuth auth;
     private EditText edtEmail,edtPass,edtConfigPass;
@@ -48,26 +50,26 @@ public class SignupActivity extends AppCompatActivity {
                 String configPass = edtConfigPass.getText().toString().trim();
 
                 if(user.isEmpty()){
-                    edtEmail.setError("Email không được để trống");
+                    StyleableToast.makeText(SignupActivity.this, "Vui lòng nhập Email", R.style.errorToast).show();
                 }
                 if (!Patterns.EMAIL_ADDRESS.matcher(user).matches()) {
-                    edtEmail.setError("Định dạng Email không hợp lệ");
+                    StyleableToast.makeText(SignupActivity.this, "Định dạng Email không chính xác", R.style.errorToast).show();
                 }
                 if(pass.isEmpty()){
-                    edtPass.setError("Mật khẩu không được để trống");
+                    StyleableToast.makeText(SignupActivity.this, "Vui lòng nhập mật khẩu", R.style.errorToast).show();
                 }
                 else if (!pass.equals(configPass)) {
-                    edtConfigPass.setError("Mật khẩu nhập lại không khớp");
+                    StyleableToast.makeText(SignupActivity.this, "Nhập lại mật khẩu không chính xác", R.style.errorToast).show();
                 }
                 else {
                     auth.createUserWithEmailAndPassword(user,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isComplete()){
-                                Toast.makeText(SignupActivity.this, "Đăng ký tài khoản thành công",Toast.LENGTH_LONG).show();
+                                StyleableToast.makeText(SignupActivity.this, "Đăng ký tài khoản thành công", R.style.successToast).show();
                                 startActivity(new Intent(SignupActivity.this,LoginActivity.class));
                             }else{
-                                Toast.makeText(SignupActivity.this, "Đăng ký thất bại, vui lòng thử lại",Toast.LENGTH_LONG).show();
+                                StyleableToast.makeText(SignupActivity.this, "Đăng ký tài khoản thất bại, vui lòng thử lại", R.style.errorToast).show();
                             }
                         }
                     });
