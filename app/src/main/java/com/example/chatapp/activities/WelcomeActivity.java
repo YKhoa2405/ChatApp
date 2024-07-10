@@ -1,20 +1,26 @@
-package com.example.chatapp;
+package com.example.chatapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+import com.example.chatapp.R;
+
+public class WelcomeActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_welcome);
 
         setupButtonClicks();
     }
@@ -40,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void navigateToActivity(Class<?> activityClass) {
-        Intent intent = new Intent(MainActivity.this, activityClass);
+        Intent intent = new Intent(WelcomeActivity.this, activityClass);
         startActivity(intent);
     }
 }

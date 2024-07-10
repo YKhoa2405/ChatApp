@@ -6,7 +6,7 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".ForgotPassActivity">
+    tools:context=".activities.ForgotPassActivity">
 
     <ImageButton
         android:id="@+id/btnGoBack"

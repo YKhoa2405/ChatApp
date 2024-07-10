@@ -4,6 +4,8 @@
     <string name="Email_address_input_field">Email address input field</string>
     <string name="Password_input_field">Password input field</string>
     <string name="client_id">153002199609-t1ru4mavduojfkqstbh1m2n6933o76qv.apps.googleusercontent.com</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

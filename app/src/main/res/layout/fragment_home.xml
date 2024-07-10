@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".activities.HomeFragment">
+
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/materialToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="?attr/actionBarSize"
+        app:title="Đoạn chat"
+        android:background="@color/backgroundColor"
+        app:titleTextColor="@color/white"
+        app:navigationIcon="@drawable/ic_search"
+        app:titleCentered="true"
+        app:menu="@menu/top_app_bar_menu"
+        android:theme="?attr/actionBarTheme" />
+    
+</FrameLayout>
