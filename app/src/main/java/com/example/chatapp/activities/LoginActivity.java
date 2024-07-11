@@ -74,7 +74,6 @@ public class LoginActivity extends AppCompatActivity {
                     auth.signInWithEmailAndPassword(email, pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            StyleableToast.makeText(LoginActivity.this, "Đăng nhập thành công", R.style.successToast).show();
                             startActivity(new Intent(LoginActivity.this,MainActivity.class));
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -147,7 +146,8 @@ public class LoginActivity extends AppCompatActivity {
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        StyleableToast.makeText(LoginActivity.this, "Đăng nhập thành công", R.style.successToast).show();
+                        startActivity(new Intent(LoginActivity.this,MainActivity.class));
+
                         // Sign in success, update UI with the signed-in user's information
                         FirebaseUser user = auth.getCurrentUser();
                         // Update UI or start a new activity
