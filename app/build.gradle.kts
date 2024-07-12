@@ -46,6 +46,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(platform("com.google.firebase:firebase-bom:33.1.1"))
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.firestore)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
@@ -54,9 +55,11 @@ dependencies {
     testImplementation ("junit:junit:4.13.2")
     implementation("com.google.android.gms:play-services-auth:20.5.0")
     implementation ("io.github.muddz:styleabletoast:2.4.0")
-
+    implementation ("com.firebaseui:firebase-ui-firestore:8.0.0")
     implementation ("com.github.bumptech.glide:glide:4.15.1")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
+
+
 
 
 }

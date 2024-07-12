@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chatapp.R;
+import com.example.chatapp.util.FirebaseUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -22,11 +23,15 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import io.github.muddz.styleabletoast.StyleableToast;
 
@@ -146,10 +151,11 @@ public class LoginActivity extends AppCompatActivity {
         auth.signInWithCredential(credential)
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
+                        FirebaseUser user = auth.getCurrentUser();
+                        saveUserInfoFireStore(user);
                         startActivity(new Intent(LoginActivity.this,MainActivity.class));
 
                         // Sign in success, update UI with the signed-in user's information
-                        FirebaseUser user = auth.getCurrentUser();
                         // Update UI or start a new activity
                     } else {
                         // If sign in fails, display a message to the user.
@@ -158,5 +164,23 @@ public class LoginActivity extends AppCompatActivity {
 
                     }
                 });
+    }
+
+    private void saveUserInfoFireStore(FirebaseUser user) {
+        if (user != null) {
+            String email = user.getEmail();
+            String avatarUrl = user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null;
+            String userName = user.getDisplayName();
+
+            Map<String, Object> userData = new HashMap<>();
+            userData.put("uid", FirebaseUtil.currentUserUid());
+            userData.put("email", email);
+            userData.put("created_at", System.currentTimeMillis());
+            userData.put("avatar",avatarUrl);
+            userData.put("user_name",userName);
+
+
+            FirebaseUtil.currentUserDetail().set(userData);
+        }
     }
 }

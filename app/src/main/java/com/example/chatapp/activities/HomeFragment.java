@@ -1,9 +1,11 @@
 package com.example.chatapp.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +22,7 @@ public class HomeFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private ChatAdapter chatAdapter;
+    private ImageButton btnSearch;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -30,6 +33,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
         // Khởi tạo RecyclerView
+        btnSearch = view.findViewById(R.id.btnSearch);
         recyclerView = view.findViewById(R.id.recycleChat);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -39,6 +43,16 @@ public class HomeFragment extends Fragment {
         // Khởi tạo và thiết lập Adapter
         chatAdapter = new ChatAdapter(getContext(), chatDataList); // Truyền context vào đây
         recyclerView.setAdapter(chatAdapter);
+
+
+        btnSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), SearchUserActivity.class);
+                startActivity(intent);
+            }
+        });
+
 
         return view;
     }
@@ -71,4 +85,5 @@ public class HomeFragment extends Fragment {
 
         return chatData;
     }
+
 }

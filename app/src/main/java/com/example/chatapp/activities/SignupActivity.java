@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chatapp.R;
+import com.example.chatapp.util.FirebaseUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -20,9 +21,12 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import io.github.muddz.styleabletoast.StyleableToast;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class SignupActivity extends AppCompatActivity {
     private FirebaseAuth auth;
-    private EditText edtEmail,edtPass,edtConfigPass;
+    private EditText edtEmail, edtPass, edtConfigPass,edtUserName;
     private Button btnSignUp;
     private ImageButton btnGoBack;
 
@@ -33,39 +37,42 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
 
         auth = FirebaseAuth.getInstance();
-        edtEmail  = findViewById(R.id.edtEmail);
-        edtPass  = findViewById(R.id.edtPass);
-        edtConfigPass  = findViewById(R.id.edtConfigPass);
-        btnSignUp  = findViewById(R.id.btnSignUp);
-        btnGoBack  =findViewById(R.id.btnGoBack);
+        edtEmail = findViewById(R.id.edtEmail);
+        edtPass = findViewById(R.id.edtPass);
+        edtConfigPass = findViewById(R.id.edtConfigPass);
+        edtUserName = findViewById(R.id.edtUserName);
+        btnSignUp = findViewById(R.id.btnSignUp);
+        btnGoBack = findViewById(R.id.btnGoBack);
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String user = edtEmail.getText().toString().trim();
                 String pass = edtPass.getText().toString().trim();
+                String useName = edtUserName.getText().toString().trim();
                 String configPass = edtConfigPass.getText().toString().trim();
 
-                if(user.isEmpty()){
+                if (user.isEmpty()) {
                     StyleableToast.makeText(SignupActivity.this, "Vui lòng nhập Email", R.style.errorToast).show();
-                }
-                if (!Patterns.EMAIL_ADDRESS.matcher(user).matches()) {
+                } else if (!Patterns.EMAIL_ADDRESS.matcher(user).matches()) {
                     StyleableToast.makeText(SignupActivity.this, "Định dạng Email không chính xác", R.style.errorToast).show();
-                }
-                if(pass.isEmpty()){
+                } else if (pass.isEmpty()) {
                     StyleableToast.makeText(SignupActivity.this, "Vui lòng nhập mật khẩu", R.style.errorToast).show();
-                }
-                else if (!pass.equals(configPass)) {
+                } else if (useName.isEmpty()) {
+                    StyleableToast.makeText(SignupActivity.this, "Vui lòng nhập tên của bạn ", R.style.errorToast).show();
+
+                } else if (!pass.equals(configPass)) {
                     StyleableToast.makeText(SignupActivity.this, "Nhập lại mật khẩu không chính xác", R.style.errorToast).show();
                 }
                 else {
-                    auth.createUserWithEmailAndPassword(user,pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    auth.createUserWithEmailAndPassword(user, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isComplete()){
+                            if (task.isSuccessful()) {
+                                saveUserInfoToFirestore(user,useName);
                                 StyleableToast.makeText(SignupActivity.this, "Đăng ký tài khoản thành công", R.style.successToast).show();
-                                startActivity(new Intent(SignupActivity.this,LoginActivity.class));
-                            }else{
+                                startActivity(new Intent(SignupActivity.this, LoginActivity.class));
+                            } else {
                                 StyleableToast.makeText(SignupActivity.this, "Đăng ký tài khoản thất bại, vui lòng thử lại", R.style.errorToast).show();
                             }
                         }
@@ -77,8 +84,19 @@ public class SignupActivity extends AppCompatActivity {
         btnGoBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(SignupActivity.this,WelcomeActivity.class));
+                startActivity(new Intent(SignupActivity.this, WelcomeActivity.class));
             }
         });
+    }
+
+    private void saveUserInfoToFirestore(String email, String userName) {
+        Map<String, Object> user = new HashMap<>();
+        user.put("email", email);
+        user.put("uid", FirebaseUtil.currentUserUid());
+        user.put("created_at", System.currentTimeMillis());
+        user.put("user_name",userName);
+
+
+        FirebaseUtil.currentUserDetail().set(user);
     }
 }
