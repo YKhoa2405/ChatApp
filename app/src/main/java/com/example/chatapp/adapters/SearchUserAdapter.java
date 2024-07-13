@@ -12,30 +12,33 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.chatapp.R;
-import com.example.chatapp.model.UserModel;
+import com.example.chatapp.model.SearchUserModel;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
-public class UserAdapter extends FirestoreRecyclerAdapter<UserModel, UserAdapter.UserViewHolder> {
+public class SearchUserAdapter extends FirestoreRecyclerAdapter<SearchUserModel, SearchUserAdapter.UserViewHolder> {
 
-    Context context;
+    private final Context context;
 
-    public UserAdapter(@NonNull FirestoreRecyclerOptions<UserModel> options,Context context) {
+    public SearchUserAdapter(@NonNull FirestoreRecyclerOptions<SearchUserModel> options, Context context) {
         super(options);
-        this.context=context;
+        this.context = context;
     }
 
     @Override
-    protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull UserModel model) {
-        holder.txtNameSearch.setText(model.getName());
-        holder.txtStatusSearch.setText(model.getStatus());
+    protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull SearchUserModel model) {
+        holder.txtNameSearch.setText(model.getUser_Name());
+        holder.txtStatusSearch.setText(model.getEmail());
+        if(model.getUser_Name()== null){
+            holder.txtNameSearch.setText("hola");
+        }
 
-        if (model.getAvatarResId() != null && !model.getAvatarResId().isEmpty()) {
+        if (model.getAvatar() != null && !model.getAvatar().isEmpty()) {
             Glide.with(holder.itemView.getContext())
-                    .load(model.getAvatarResId())
+                    .load(model.getAvatar())
                     .into(holder.imgAvatarSearch);
         } else {
-            holder.imgAvatarSearch.setImageResource(R.drawable.forgot_password);
+            holder.imgAvatarSearch.setImageResource(R.drawable.forgot_password); // Placeholder image
         }
     }
 
@@ -46,7 +49,7 @@ public class UserAdapter extends FirestoreRecyclerAdapter<UserModel, UserAdapter
         return new UserViewHolder(view);
     }
 
-    class UserViewHolder extends RecyclerView.ViewHolder {
+    static class UserViewHolder extends RecyclerView.ViewHolder {
         ImageView imgAvatarSearch;
         TextView txtNameSearch, txtStatusSearch;
 

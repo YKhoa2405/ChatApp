@@ -7,7 +7,6 @@
     tools:context=".activities.SearchUserActivity">
 
     <LinearLayout
-        android:layout_marginTop="24dp"
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="70dp"
@@ -22,29 +21,16 @@
             android:layout_marginEnd="10dp"
             android:background="?attr/selectableItemBackground"
             android:src="@drawable/baseline_arrow_back_24" />
-
-        <EditText
+        
+        <SearchView
             android:id="@+id/searchView"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:padding="8dp"
-            android:ems="10"
-            android:inputType="text"
-            android:hint="Tìm kiếm ..."
-            android:background="@drawable/edit_text_round_corner"/>
-
-        <ImageButton
-            android:id="@+id/btnSearch"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="16dp"
-            android:background="?attr/selectableItemBackground"
-            android:src="@drawable/ic_search" />
-
+            android:layout_width="match_parent"
+            android:queryHint="Tìm kiếm ..."
+            android:layout_height="match_parent" />
 
     </LinearLayout>
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycleSearchResult"
