@@ -32,11 +32,11 @@ public class ChatMessRecycleAdapter extends FirestoreRecyclerAdapter<ChatMessage
         if(model.getSenderId().equals(FirebaseUtil.currentUserUid())){
             holder.leftChatLayout.setVisibility(View.GONE);
             holder.rightChatLayout.setVisibility(View.VISIBLE);
-            holder.rightChatTxt.setText(model.getMessage());
+            holder.rightChatTxt.setText(String.format("%s\n%s", model.getMessage(), FirebaseUtil.timestampToStringFormat(model.getTimestamp())));
         } else {
             holder.rightChatLayout.setVisibility(View.GONE);
             holder.leftChatLayout.setVisibility(View.VISIBLE);
-            holder.letChatTxt.setText(model.getMessage());
+            holder.leftChatTxt.setText(model.getMessage());
         }
     }
 
@@ -51,13 +51,13 @@ public class ChatMessRecycleAdapter extends FirestoreRecyclerAdapter<ChatMessage
 
     static class ChatMessageViewHolder extends RecyclerView.ViewHolder {
         LinearLayout leftChatLayout,rightChatLayout;
-        TextView letChatTxt,rightChatTxt;
+        TextView leftChatTxt,rightChatTxt;
 
         ChatMessageViewHolder(@NonNull View itemView) {
             super(itemView);
             leftChatLayout = itemView.findViewById(R.id.leftChatLayout);
             rightChatLayout = itemView.findViewById(R.id.rightChatLayout);
-            letChatTxt = itemView.findViewById(R.id.letChatTxt);
+            leftChatTxt = itemView.findViewById(R.id.leftChatTxt);
             rightChatTxt = itemView.findViewById(R.id.rightChatTxt);
 
         }

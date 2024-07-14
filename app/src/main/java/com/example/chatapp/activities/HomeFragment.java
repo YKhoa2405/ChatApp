@@ -1,28 +1,31 @@
 package com.example.chatapp.activities;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatapp.R;
-import com.example.chatapp.adapters.ChatAdapter;
-import com.example.chatapp.model.ChatData;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.chatapp.adapters.ChatRecentAdapter;
+import com.example.chatapp.model.ChatRoomModel;
+import com.example.chatapp.util.FirebaseUtil;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.Query;
 
 public class HomeFragment extends Fragment {
 
-    private RecyclerView recyclerView;
-    private ChatAdapter chatAdapter;
+    private RecyclerView recycleChatRecent;
+    private ChatRecentAdapter chatRecentAdapter;
     private ImageButton btnSearch;
+    private ImageView imgAvatar;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -34,16 +37,7 @@ public class HomeFragment extends Fragment {
 
         // Khởi tạo RecyclerView
         btnSearch = view.findViewById(R.id.btnSearch);
-        recyclerView = view.findViewById(R.id.recycleChat);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-
-        // Khởi tạo danh sách dữ liệu giả lập
-        List<ChatData> chatDataList = generateDummyContacts();
-
-        // Khởi tạo và thiết lập Adapter
-        chatAdapter = new ChatAdapter(getContext(), chatDataList); // Truyền context vào đây
-        recyclerView.setAdapter(chatAdapter);
-
+        recycleChatRecent = view.findViewById(R.id.recycleChatRecent);
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,39 +47,51 @@ public class HomeFragment extends Fragment {
             }
         });
 
-
-
+        setUpRecycleChatRecent();
 
         return view;
     }
 
-    // Phương thức để tạo dữ liệu giả lập danh sách ChatData
-    private List<ChatData> generateDummyContacts() {
-        List<ChatData> chatData = new ArrayList<>();
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
-        chatData.add(new ChatData("Nguyen Y Khoa", "Xin chào việt nam","https://res.cloudinary.com/dsbebvfff/image/upload/v1718730800/pexels-pok-rie-33563-982263_jyw5od.jpg", "20 giờ trước"));
+    void setUpRecycleChatRecent(){
+        Query query = FirebaseUtil.allChatRoomCollection()
+                .whereArrayContains("userIds",FirebaseUtil.currentUserUid())
+                .orderBy("lassMessageTimestamp",Query.Direction.DESCENDING);
 
+        FirestoreRecyclerOptions<ChatRoomModel> options = new FirestoreRecyclerOptions.Builder<ChatRoomModel>()
+                .setQuery(query, ChatRoomModel.class)
+                .build();
 
-        // Thêm các ChatData khác nếu cần
+        // Set up the RecyclerView
+        chatRecentAdapter = new ChatRecentAdapter(options, getContext());
+        recycleChatRecent.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        recycleChatRecent.setAdapter(chatRecentAdapter);
+        chatRecentAdapter.startListening();
+    }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (chatRecentAdapter != null) {
+            chatRecentAdapter.startListening();
+        }
+    }
 
-        return chatData;
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (chatRecentAdapter != null) {
+            chatRecentAdapter.stopListening();
+        }
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    @Override
+    public  void onResume(){
+        super.onResume();
+        if(chatRecentAdapter!=null){
+            chatRecentAdapter.notifyDataSetChanged();
+        }
     }
 
 }

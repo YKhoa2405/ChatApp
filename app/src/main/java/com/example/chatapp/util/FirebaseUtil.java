@@ -1,10 +1,16 @@
 package com.example.chatapp.util;
 
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.TimerTask;
+import java.util.logging.SimpleFormatter;
 
 public class FirebaseUtil {
 
@@ -40,4 +46,24 @@ public class FirebaseUtil {
 
         }
     }
+
+//    lấy tất cả danh sách phòng nhắn tin của user
+    public static CollectionReference allChatRoomCollection(){
+        return FirebaseFirestore.getInstance().collection("chatRooms");
+    }
+
+//    Lấy ra thông tin của user bản thân đang nhắn tin
+    public static DocumentReference getOrtherUserFromChatRoom(List<String> userIds){
+        if(userIds.get(0).equals(FirebaseUtil.currentUserUid())){
+            return  allUserCollection().document(userIds.get(1));
+        } else{
+            return  allUserCollection().document(userIds.get(0));
+        }
+    }
+
+    public static String timestampToStringFormat(Timestamp timestamp){
+        return new SimpleDateFormat("HH:mm").format(timestamp.toDate());
+    }
+
+
 }

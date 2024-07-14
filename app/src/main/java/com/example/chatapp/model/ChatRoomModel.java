@@ -9,8 +9,10 @@ public class ChatRoomModel {
     String lastMessageSenderId;
     Timestamp lassMessageTimestamp;
     List<String> userIds;
+    String lassMessageText;
 
     public ChatRoomModel(){}
+
 
     public ChatRoomModel(String chatRoomId, List<String> userIds, Timestamp lassMessageTimestamp, String lastMessageSenderId) {
         this.chatRoomId = chatRoomId;
@@ -47,6 +49,14 @@ public class ChatRoomModel {
 
     public void setUserIds(List<String> userIds) {
         this.userIds = userIds;
+    }
+
+    public String getLassMessageText() {
+        return lassMessageText;
+    }
+
+    public void setLassMessageText(String lassMessageText) {
+        this.lassMessageText = lassMessageText;
     }
 
 

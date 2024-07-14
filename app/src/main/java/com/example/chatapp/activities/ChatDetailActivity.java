@@ -1,6 +1,8 @@
 package com.example.chatapp.activities;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -76,17 +78,35 @@ public class ChatDetailActivity extends AppCompatActivity {
         getCreateChatRoomModel();
         setUpChatMessageRecycle();
 
+        edtMessage.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                // Kiểm tra nội dung của EditText và ẩn/hiện nút gửi
+                String message = charSequence.toString().trim();
+                if (message.isEmpty()) {
+                    btnSend.setVisibility(View.GONE); // Ẩn nút gửi
+                } else {
+                    btnSend.setVisibility(View.VISIBLE); // Hiển thị nút gửi
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {}
+
+        });
+
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String message = edtMessage.getText().toString().trim();
-                if(message.isEmpty()){
-                    return;
-                }
-                else{
+                if (!message.isEmpty()) {
                     sendMessageUer(message);
+                    edtMessage.setText(""); // Xóa nội dung sau khi gửi
                 }
-
             }
         });
     }
@@ -97,6 +117,8 @@ public class ChatDetailActivity extends AppCompatActivity {
         chatRoomModel.setLassMessageTimestamp(Timestamp.now());
 //        Cập nhật người gửi tin nhắn cuối cùng bằng UID của người dùng hiện tại.
         chatRoomModel.setLastMessageSenderId(FirebaseUtil.currentUserUid());
+//        Cập nhật tin nhắn cuối cùng
+        chatRoomModel.setLassMessageText(message);
 //        Lưu thông tin cập nhật
         FirebaseUtil.getChatRooms(chatRoomId).set(chatRoomModel);
 //        Đối tượng tin nhắn mới
@@ -115,6 +137,7 @@ public class ChatDetailActivity extends AppCompatActivity {
             if (task.isSuccessful()) {
                 // Lấy kết quả từ Firestore và chuyển đổi thành đối tượng ChatRoomModel
                 chatRoomModel = task.getResult().toObject(ChatRoomModel.class);
+
                 if (chatRoomModel == null) {
 
                     chatRoomModel = new ChatRoomModel(
