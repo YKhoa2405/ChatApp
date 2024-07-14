@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
     tools:context=".activities.ChatDetailActivity">
 
     <LinearLayout
@@ -11,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:gravity="center_vertical"
-
         android:orientation="horizontal">
 
         <ImageButton
@@ -19,17 +19,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:background="?attr/backgroundColor"
-            app:layout_constraintStart_toStartOf="parent"
+            android:background="?attr/selectableItemBackground"
             app:srcCompat="@drawable/baseline_arrow_back_24" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"
             android:layout_width="44dp"
             android:layout_height="44dp"
-            android:layout_marginRight="10dp"
-            app:cardCornerRadius="26dp"
-            app:layout_constraintStart_toEndOf="@+id/btnGoBack">
+            android:layout_marginEnd="10dp"
+            app:cardCornerRadius="26dp">
 
             <ImageView
                 android:id="@+id/imgAvatar"
@@ -42,14 +40,10 @@
             android:id="@+id/txtUserName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nguyen Y Khoa"
             android:textSize="16sp"
-            android:textStyle="bold"
-            tools:layout_editor_absoluteX="141dp"
-            tools:layout_editor_absoluteY="16dp" />
-
-
+            android:textStyle="bold" />
     </LinearLayout>
+
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
@@ -58,47 +52,52 @@
         android:background="@android:color/darker_gray" />
 
     <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatRecycle"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingTop="10dp"
+        android:layout_below="@id/divider"
+        android:layout_above="@id/bottomLayout"
+        android:paddingBottom="70dp"
         android:clipToPadding="false"
-        android:scrollbars="vertical"
-        android:layout_below="@id/topBar"
-        />
+        android:paddingVertical="10dp"
+        android:scrollbars="vertical" />
 
     <LinearLayout
+        android:id="@+id/bottomLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
         android:gravity="center_vertical"
+        android:orientation="horizontal"
         android:padding="8dp">
 
         <ImageButton
             android:id="@+id/btnSendImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_photo"
-            android:background="?attr/backgroundColor"
-            android:contentDescription="Send"
-            android:layout_marginRight="10dp"/>
+            android:layout_marginEnd="10dp"
+            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/ic_photo" />
+
         <EditText
-            android:id="@+id/edt_message"
+            android:id="@+id/edtMessage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginVertical="5dp"
             android:layout_weight="1"
-            android:hint="Nhắn tin"
-            android:maxLines="3"
+            android:background="@drawable/edit_text_round_corner"
+            android:elevation="1dp"
+            android:hint="Nhắn tin ..."
+            android:imeOptions="actionSend"
             android:inputType="textMultiLine"
-            android:imeOptions="actionSend" />
+            android:padding="10dp" />
 
         <ImageButton
-            android:id="@+id/btn_send"
+            android:id="@+id/btnSend"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_send"
-            android:layout_marginLeft="10dp"
-            android:background="?attr/backgroundColor"
-            android:contentDescription="Send" />
+            android:layout_marginStart="10dp"
+            android:background="?attr/selectableItemBackground"
+            android:src="@drawable/ic_send" />
     </LinearLayout>
 </RelativeLayout>

@@ -5,4 +5,8 @@
     <color name="backgroundColor">#141e30</color>
     <color name="buttonColor">#6d717e</color>
     <color name="textColor">#3D4A7A</color>
+    <color name="chatColor">#eff4f7</color>
+    <color name="chatColorMe">#3d4a7a</color>
+
+
 </resources>

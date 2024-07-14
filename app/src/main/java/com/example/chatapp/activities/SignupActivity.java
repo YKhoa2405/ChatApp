@@ -92,9 +92,10 @@ public class SignupActivity extends AppCompatActivity {
     private void saveUserInfoToFirestore(String email, String userName) {
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
-        user.put("uid", FirebaseUtil.currentUserUid());
+        user.put("userId", FirebaseUtil.currentUserUid());
         user.put("created_at", System.currentTimeMillis());
         user.put("user_name",userName);
+        user.put("avatar", "https://res.cloudinary.com/dsbebvfff/image/upload/v1720890023/user-profile-icon-free-vector_xcepte.jpg");
 
 
         FirebaseUtil.currentUserDetail().set(user);

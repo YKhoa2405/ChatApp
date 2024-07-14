@@ -1,6 +1,7 @@
 package com.example.chatapp.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.chatapp.R;
+import com.example.chatapp.activities.ChatDetailActivity;
 import com.example.chatapp.model.SearchUserModel;
+import com.example.chatapp.util.AndroidUtil;
+import com.example.chatapp.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
@@ -27,19 +31,27 @@ public class SearchUserAdapter extends FirestoreRecyclerAdapter<SearchUserModel,
 
     @Override
     protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull SearchUserModel model) {
-        holder.txtNameSearch.setText(model.getUser_Name());
+        holder.txtNameSearch.setText(model.getUser_name());
         holder.txtStatusSearch.setText(model.getEmail());
-        if(model.getUser_Name()== null){
-            holder.txtNameSearch.setText("hola");
+        if(model.getUserId().equals(FirebaseUtil.currentUserUid())){
+            holder.txtNameSearch.setText(String.format("%s(Tôi)", model.getUser_name()));
         }
 
         if (model.getAvatar() != null && !model.getAvatar().isEmpty()) {
             Glide.with(holder.itemView.getContext())
                     .load(model.getAvatar())
                     .into(holder.imgAvatarSearch);
-        } else {
-            holder.imgAvatarSearch.setImageResource(R.drawable.forgot_password); // Placeholder image
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(context, ChatDetailActivity.class);
+                AndroidUtil.passUserModelAsIntent(intent,model);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+            }
+        });
     }
 
     @NonNull

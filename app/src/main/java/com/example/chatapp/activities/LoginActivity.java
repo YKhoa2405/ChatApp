@@ -173,7 +173,7 @@ public class LoginActivity extends AppCompatActivity {
             String userName = user.getDisplayName();
 
             Map<String, Object> userData = new HashMap<>();
-            userData.put("uid", FirebaseUtil.currentUserUid());
+            userData.put("userId", FirebaseUtil.currentUserUid());
             userData.put("email", email);
             userData.put("created_at", System.currentTimeMillis());
             userData.put("avatar",avatarUrl);
