@@ -1,8 +1,13 @@
 package com.example.chatapp.util;
 
+import android.content.Context;
 import android.content.Intent;
 
+import com.example.chatapp.R;
+import com.example.chatapp.activities.LoginActivity;
 import com.example.chatapp.model.SearchUserModel;
+
+import io.github.muddz.styleabletoast.StyleableToast;
 
 public class AndroidUtil {
 
@@ -19,5 +24,6 @@ public class AndroidUtil {
         userModel.setUserId(intent.getStringExtra("userId"));
         return userModel;
     }
+
 
 }

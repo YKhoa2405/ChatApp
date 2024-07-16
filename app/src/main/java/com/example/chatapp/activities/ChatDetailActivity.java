@@ -1,6 +1,10 @@
 package com.example.chatapp.activities;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -11,7 +15,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -27,15 +36,23 @@ import com.example.chatapp.util.AndroidUtil;
 import com.example.chatapp.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.sql.Time;
 import java.util.Arrays;
 
+import io.github.muddz.styleabletoast.StyleableToast;
+
 public class ChatDetailActivity extends AppCompatActivity {
+
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     String chatRoomId;
     SearchUserModel otherUser;
@@ -104,25 +121,38 @@ public class ChatDetailActivity extends AppCompatActivity {
             public void onClick(View view) {
                 String message = edtMessage.getText().toString().trim();
                 if (!message.isEmpty()) {
-                    sendMessageUer(message);
+                    sendMessageUer(message,1);
                     edtMessage.setText(""); // Xóa nội dung sau khi gửi
                 }
             }
         });
+
+        btnSendImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGallery();
+            }
+        });
     }
 
-    void sendMessageUer(String message){
+    void sendMessageUer(String message,int methodMess){
 
 //         Cập nhật thời gian của tin nhắn cuối cùng trong phòng chat bằng thời gian hiện tại.
         chatRoomModel.setLassMessageTimestamp(Timestamp.now());
 //        Cập nhật người gửi tin nhắn cuối cùng bằng UID của người dùng hiện tại.
         chatRoomModel.setLastMessageSenderId(FirebaseUtil.currentUserUid());
 //        Cập nhật tin nhắn cuối cùng
-        chatRoomModel.setLassMessageText(message);
+        if(methodMess==1){
+            chatRoomModel.setLassMessageText(message);
+        }else if(methodMess==2){
+            chatRoomModel.setLassMessageText("Đã gửi một hình ảnh");
+        }
+
+
 //        Lưu thông tin cập nhật
         FirebaseUtil.getChatRooms(chatRoomId).set(chatRoomModel);
 //        Đối tượng tin nhắn mới
-        ChatMessageModel chatMessageModel = new ChatMessageModel(FirebaseUtil.currentUserUid(),message, Timestamp.now());
+        ChatMessageModel chatMessageModel = new ChatMessageModel(FirebaseUtil.currentUserUid(),message, Timestamp.now(),methodMess);
 
         FirebaseUtil.getChatRoomMessage(chatRoomId).add(chatMessageModel).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override
@@ -132,6 +162,8 @@ public class ChatDetailActivity extends AppCompatActivity {
         });
     }
 
+
+//    Tạo phòng chat giưã 2 người
     void getCreateChatRoomModel() {
         FirebaseUtil.getChatRooms(chatRoomId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -153,15 +185,13 @@ public class ChatDetailActivity extends AppCompatActivity {
         });
     }
 
+//    Hiển thị tin nhắn lên màn hình
     void setUpChatMessageRecycle(){
-//        Câu lệnh truy vấn
         Query query = FirebaseUtil.getChatRoomMessage(chatRoomId).orderBy("timestamp",Query.Direction.DESCENDING);
-
 
         FirestoreRecyclerOptions<ChatMessageModel> options = new FirestoreRecyclerOptions.Builder<ChatMessageModel>()
                 .setQuery(query, ChatMessageModel.class)
                 .build();
-
 
         // Tạo adapter, luôn luôn phải có để sử dụng adapter
         adapter = new ChatMessRecycleAdapter(options, this);
@@ -172,10 +202,8 @@ public class ChatDetailActivity extends AppCompatActivity {
         chatRecycle.setLayoutManager(manager);
         // Set up the RecyclerView
         chatRecycle.setAdapter(adapter);
-
 //        Lắng nghe thay đổi của recycleView
         adapter.startListening();
-
 //        Cuộn RecyclerView mượt mà đến vị trí đầu tiên (tin nhắn mới nhất) khi có tin nhắn mới được chèn vào.
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
@@ -184,6 +212,50 @@ public class ChatDetailActivity extends AppCompatActivity {
                 chatRecycle.smoothScrollToPosition(0);
             }
         });
+    }
+
+//    Mở thư viện ảnh
+    void openGallery(){
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        openGallery.launch(intent);
+    }
+    ActivityResultLauncher<Intent> openGallery = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+            new ActivityResultCallback<ActivityResult>() {
+                @Override
+                public void onActivityResult(ActivityResult result) {
+                    if (result.getResultCode() == Activity.RESULT_OK) {
+                        Intent data = result.getData();
+                        if (data != null && data.getData() != null) {
+                            Uri uriImage = data.getData();
+                            uploadImageStorage(uriImage);
+                        }
+                    }
+                }
+            });
+
+//    Tải ảnh lên Firebase Storage
+    void uploadImageStorage(Uri uriImage){
+        StorageReference storageRef = FirebaseUtil.getStorageReferenceForImage(chatRoomId);
+        storageRef.putFile(uriImage).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                storageRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        sendMessageUer(uri.toString(),2);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        StyleableToast.makeText(ChatDetailActivity.this, "Có lỗi xảy ra", R.style.errorToast).show();
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                StyleableToast.makeText(ChatDetailActivity.this, "Có lỗi xảy ra", R.style.errorToast).show();
+            }});
     }
 
 

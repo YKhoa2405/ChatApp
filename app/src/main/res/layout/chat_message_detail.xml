@@ -20,7 +20,15 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="@color/black" />
+
     </LinearLayout>
+    <ImageView
+        android:id="@+id/leftChatImage"
+        android:layout_width="150dp"
+        android:layout_height="230dp"
+        android:scaleType="fitCenter"
+        android:layout_marginHorizontal="10dp"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/rightChatLayout"
@@ -40,5 +48,14 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="@color/white" />
+
     </LinearLayout>
+    <ImageView
+        android:id="@+id/rightChatImage"
+        android:layout_width="150dp"
+        android:layout_height="230dp"
+        android:scaleType="fitCenter"
+        android:layout_marginHorizontal="10dp"
+        android:layout_alignParentEnd="true"
+        android:visibility="gone"/>
 </RelativeLayout>
