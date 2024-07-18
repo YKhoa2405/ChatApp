@@ -73,7 +73,11 @@ public class FirebaseUtil {
         return FirebaseStorage.getInstance().getReference("chat_images")
             .child(chatRoomId)
             .child(System.currentTimeMillis() + ".jpg");
-}
+    }
+
+    public static void logout(){
+        FirebaseAuth.getInstance().signOut();
+    }
 
 
 

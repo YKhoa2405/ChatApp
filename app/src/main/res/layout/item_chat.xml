@@ -7,42 +7,69 @@
     android:paddingHorizontal="18dp"
     android:paddingTop="8dp">
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardAvatar"
-        android:layout_width="52dp"
-        android:layout_height="52dp"
-        app:cardCornerRadius="26dp"
+    <FrameLayout
+        android:id="@+id/frameCardImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardAvatar"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+
+            app:cardCornerRadius="26dp">
+
+            <ImageView
+                android:id="@+id/imgAvatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                tools:srcCompat="@tools:sample/avatars" />
+
+            <ImageView
+                android:id="@+id/imgStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="2dp"
+                android:layout_marginEnd="2dp"
+                android:layout_gravity="bottom|end"
+                app:srcCompat="@drawable/circle_shape" />
+        </androidx.cardview.widget.CardView>
+
         <ImageView
-            android:id="@+id/imgAvatar"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scaleType="fitXY"
-            tools:srcCompat="@tools:sample/avatars" />
-    </androidx.cardview.widget.CardView>
+            android:id="@+id/imgStatus1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:layout_marginEnd="2dp"
+            android:layout_gravity="bottom|end"
+            app:srcCompat="@drawable/circle_shape" />
+    </FrameLayout>
+
 
     <TextView
         android:id="@+id/txtName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="16dp"
         android:textSize="20sp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/cardAvatar"
-        app:layout_constraintTop_toTopOf="@+id/cardAvatar" />
+        app:layout_constraintStart_toEndOf="@+id/frameCardImage"
+        app:layout_constraintTop_toTopOf="@+id/frameCardImage" />
 
     <TextView
         android:id="@+id/txtLastChat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:textColor="@color/buttonColor"
-        app:layout_constraintBottom_toBottomOf="@+id/cardAvatar"
-        app:layout_constraintStart_toEndOf="@+id/cardAvatar"
+        app:layout_constraintBottom_toBottomOf="@+id/frameCardImage"
+        app:layout_constraintStart_toEndOf="@+id/frameCardImage"
         app:layout_constraintTop_toBottomOf="@+id/txtName" />
 
     <TextView
@@ -65,5 +92,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/txtLastChat"
-        app:layout_constraintTop_toBottomOf="@+id/cardAvatar" />
+        app:layout_constraintTop_toBottomOf="@+id/frameCardImage" />
 </androidx.constraintlayout.widget.ConstraintLayout>

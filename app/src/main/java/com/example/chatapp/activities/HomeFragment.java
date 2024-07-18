@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.chatapp.R;
 import com.example.chatapp.adapters.ChatRecentAdapter;
 import com.example.chatapp.model.ChatRoomModel;
@@ -38,6 +39,8 @@ public class HomeFragment extends Fragment {
         // Khởi tạo RecyclerView
         btnSearch = view.findViewById(R.id.btnSearch);
         recycleChatRecent = view.findViewById(R.id.recycleChatRecent);
+        imgAvatar = view.findViewById(R.id.imgAvatar);
+
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
