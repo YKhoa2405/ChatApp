@@ -1,5 +1,7 @@
 package com.example.chatapp.model;
 
+import com.google.firebase.Timestamp;
+
 public class SearchUserModel {
     private String user_name;
     private String avatar;

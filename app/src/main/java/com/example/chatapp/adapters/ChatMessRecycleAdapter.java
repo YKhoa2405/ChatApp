@@ -20,6 +20,13 @@ import com.example.chatapp.model.SearchUserModel;
 import com.example.chatapp.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.Timestamp;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+import java.util.Calendar;
 
 public class ChatMessRecycleAdapter extends FirestoreRecyclerAdapter<ChatMessageModel,ChatMessRecycleAdapter.ChatMessageViewHolder> {
 
@@ -30,36 +37,68 @@ public class ChatMessRecycleAdapter extends FirestoreRecyclerAdapter<ChatMessage
     }
 
 
-    @Override
     protected void onBindViewHolder(@NonNull ChatMessageViewHolder holder, int position, @NonNull ChatMessageModel model) {
-//        Kiểm tra xem đâu là tin nhắn của người dùng đang đang nhập để hiển thị giao diện
-        if(model.getMessageMethod()==1){
-            if(model.getSenderId().equals(FirebaseUtil.currentUserUid())){
+        // Kiểm tra loại tin nhắn
+        if (model.getMessageMethod() == 1) {
+            // Tin nhắn text
+            if (model.getSenderId().equals(FirebaseUtil.currentUserUid())) {
+                // Tin nhắn từ người dùng hiện tại
                 holder.leftChatLayout.setVisibility(View.GONE);
                 holder.rightChatLayout.setVisibility(View.VISIBLE);
-                holder.rightChatTxt.setText(String.format("%s\n%s", model.getMessage(), FirebaseUtil.timestampToStringFormat(model.getTimestamp())));
+                holder.rightChatTxt.setText(model.getMessage());
+                holder.txtTimeChat.setVisibility(View.VISIBLE);
+                holder.txtTimeLeftChatDetail.setVisibility(View.GONE);
+                holder.txtTimeChat.setText(getFormattedDateTime(model.getTimestamp()));
             } else {
+                // Tin nhắn từ người gửi khác
                 holder.rightChatLayout.setVisibility(View.GONE);
                 holder.leftChatLayout.setVisibility(View.VISIBLE);
                 holder.leftChatTxt.setText(model.getMessage());
+                holder.txtTimeChat.setVisibility(View.GONE);
+                holder.txtTimeLeftChatDetail.setVisibility(View.VISIBLE);
+                holder.txtTimeLeftChatDetail.setText(getFormattedDateTime(model.getTimestamp()));
             }
-        } else if(model.getMessageMethod()== 2){
+        } else if (model.getMessageMethod() == 2) {
+            // Tin nhắn hình ảnh
             if (model.getSenderId().equals(FirebaseUtil.currentUserUid())) {
+                // Tin nhắn hình ảnh từ người dùng hiện tại
                 holder.leftChatLayout.setVisibility(View.GONE);
                 holder.rightChatLayout.setVisibility(View.GONE);
-                holder.rightChatImage.setVisibility(View.VISIBLE); // Show image view for right side
-                holder.rightChatTxt.setVisibility(View.GONE); // Hide text view for right side
+                holder.rightChatImage.setVisibility(View.VISIBLE);
                 Glide.with(context).load(model.getMessage()).into(holder.rightChatImage);
             } else {
+                // Tin nhắn hình ảnh từ người gửi khác
                 holder.rightChatLayout.setVisibility(View.GONE);
                 holder.leftChatLayout.setVisibility(View.GONE);
-                holder.leftChatTxt.setVisibility(View.GONE); // Hide text view for left side
-                holder.leftChatImage.setVisibility(View.VISIBLE); // Show image view for left side
+                holder.leftChatImage.setVisibility(View.VISIBLE);
                 Glide.with(context).load(model.getMessage()).into(holder.leftChatImage);
             }
         }
-
     }
+
+    public String getFormattedDateTime(Timestamp timestamp) {
+        // Chuyển đổi Timestamp thành Date
+        Date date = timestamp.toDate();
+
+        // Lấy ngày hiện tại
+        Calendar now = Calendar.getInstance();
+        Calendar messageTime = Calendar.getInstance();
+        messageTime.setTime(date);
+
+        // So sánh ngày hiện tại và ngày của tin nhắn
+        if (now.get(Calendar.YEAR) == messageTime.get(Calendar.YEAR)
+                && now.get(Calendar.DAY_OF_YEAR) == messageTime.get(Calendar.DAY_OF_YEAR)) {
+            // Nếu cùng ngày thì chỉ hiển thị giờ và phút
+            SimpleDateFormat format = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+            return format.format(date);
+        } else {
+            // Nếu khác ngày thì hiển thị ngày tháng năm và giờ phút
+            SimpleDateFormat format = new SimpleDateFormat("MMM dd, 'at' hh:mm a", Locale.getDefault());
+            return format.format(date);
+        }
+    }
+
+
 
     @NonNull
     @Override
@@ -72,7 +111,7 @@ public class ChatMessRecycleAdapter extends FirestoreRecyclerAdapter<ChatMessage
 
     static class ChatMessageViewHolder extends RecyclerView.ViewHolder {
         LinearLayout leftChatLayout,rightChatLayout;
-        TextView leftChatTxt,rightChatTxt;
+        TextView leftChatTxt,rightChatTxt,txtTimeChat,txtTimeLeftChatDetail,txtTimeRightChatDetail;
         ImageView rightChatImage,leftChatImage;
 
         ChatMessageViewHolder(@NonNull View itemView) {
@@ -83,6 +122,9 @@ public class ChatMessRecycleAdapter extends FirestoreRecyclerAdapter<ChatMessage
             rightChatTxt = itemView.findViewById(R.id.rightChatTxt);
             leftChatImage = itemView.findViewById(R.id.leftChatImage);
             rightChatImage = itemView.findViewById(R.id.rightChatImage);
+            txtTimeChat = itemView.findViewById(R.id.txtTimeChat);
+            txtTimeLeftChatDetail = itemView.findViewById(R.id.txtTimeLeftChatDetail);
+            txtTimeRightChatDetail = itemView.findViewById(R.id.txtTimeRightChatDetail);
 
         }
     }

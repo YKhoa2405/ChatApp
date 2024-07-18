@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.chatapp.R;
 import com.example.chatapp.activities.ChatDetailActivity;
+import com.example.chatapp.activities.ProfileUserActivity;
 import com.example.chatapp.model.SearchUserModel;
 import com.example.chatapp.util.AndroidUtil;
 import com.example.chatapp.util.FirebaseUtil;
@@ -50,7 +51,7 @@ public class SearchUserAdapter extends FirestoreRecyclerAdapter<SearchUserModel,
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(context, ChatDetailActivity.class);
+                Intent intent = new Intent(context, ProfileUserActivity.class);
                 AndroidUtil.passUserModelAsIntent(intent,model);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);

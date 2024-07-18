@@ -15,6 +15,7 @@ public class AndroidUtil {
         intent.putExtra("user_name",model.getUser_name());
         intent.putExtra("avatar",model.getAvatar());
         intent.putExtra("userId",model.getUserId());
+        intent.putExtra("email",model.getEmail());
     }
 
     public static SearchUserModel getUserModelAsIntent(Intent intent){
@@ -22,6 +23,9 @@ public class AndroidUtil {
         userModel.setUser_name(intent.getStringExtra("user_name"));
         userModel.setAvatar(intent.getStringExtra("avatar"));
         userModel.setUserId(intent.getStringExtra("userId"));
+        userModel.setEmail(intent.getStringExtra("email"));
+
+
         return userModel;
     }
 

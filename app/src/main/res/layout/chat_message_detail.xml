@@ -3,6 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <TextView
+        android:id="@+id/txtTimeChat"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:textColor="@color/textColor"
+        android:textSize="12sp"
+        android:paddingVertical="5dp"
+        android:text="22h55" />
+
     <LinearLayout
         android:id="@+id/leftChatLayout"
         android:layout_width="wrap_content"
@@ -12,6 +22,7 @@
         android:backgroundTint="@color/chatColor"
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="6dp"
+        android:layout_below="@id/txtTimeChat"
         android:orientation="horizontal">
 
         <TextView
@@ -21,16 +32,28 @@
             android:textSize="16sp"
             android:textColor="@color/black" />
 
+        <TextView
+            android:id="@+id/txtTimeLeftChatDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_marginTop="5dp"
+            android:textStyle="italic"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black" />
+
     </LinearLayout>
     <ImageView
         android:id="@+id/leftChatImage"
         android:layout_width="150dp"
         android:layout_height="230dp"
         android:scaleType="fitCenter"
+        android:layout_below="@id/txtTimeChat"
         android:layout_marginHorizontal="10dp"
         android:visibility="gone" />
 
     <LinearLayout
+        android:layout_below="@id/txtTimeChat"
         android:id="@+id/rightChatLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -48,9 +71,19 @@
             android:layout_height="wrap_content"
             android:textSize="16sp"
             android:textColor="@color/white" />
+        <TextView
+            android:id="@+id/txtTimeRightChatDetail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:layout_marginTop="5dp"
+            android:textStyle="italic"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/white" />
 
     </LinearLayout>
     <ImageView
+        android:layout_below="@id/txtTimeChat"
         android:id="@+id/rightChatImage"
         android:layout_width="150dp"
         android:layout_height="230dp"

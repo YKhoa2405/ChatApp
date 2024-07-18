@@ -89,6 +89,8 @@ public class ChatDetailActivity extends AppCompatActivity {
             finish();
         });
 
+
+
         txtUserName.setText(otherUser.getUser_name());
         Glide.with(this).load(otherUser.getAvatar()).into(imgAvatar);
 
