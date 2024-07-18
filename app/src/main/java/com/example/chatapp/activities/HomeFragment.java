@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.chatapp.R;
 import com.example.chatapp.adapters.ChatRecentAdapter;
 import com.example.chatapp.model.ChatRoomModel;
+import com.example.chatapp.model.SearchUserModel;
 import com.example.chatapp.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.firestore.Query;
@@ -27,6 +28,7 @@ public class HomeFragment extends Fragment {
     private ChatRecentAdapter chatRecentAdapter;
     private ImageButton btnSearch;
     private ImageView imgAvatar;
+    SearchUserModel currentUserModel;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -41,6 +43,7 @@ public class HomeFragment extends Fragment {
         recycleChatRecent = view.findViewById(R.id.recycleChatRecent);
         imgAvatar = view.findViewById(R.id.imgAvatar);
 
+        getUserData();
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -72,12 +75,45 @@ public class HomeFragment extends Fragment {
         chatRecentAdapter.startListening();
     }
 
+
+
+    private void updateCurrentUserStatus(String status) {
+        FirebaseUtil.currentUserDetail().get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                currentUserModel = task.getResult().toObject(SearchUserModel.class);
+                if (currentUserModel != null) {
+                    FirebaseUtil.updateStatusUser(currentUserModel.getUserId(), status);
+                }
+            }
+        });
+    }
+
+    void getUserData() {
+        FirebaseUtil.currentUserDetail().get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                currentUserModel = task.getResult().toObject(SearchUserModel.class);
+                if (currentUserModel != null) {
+                    Glide.with(this)
+                            .load(currentUserModel.getAvatar())
+                            .into(imgAvatar);
+                }
+            }
+        });
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         if (chatRecentAdapter != null) {
             chatRecentAdapter.startListening();
         }
+        updateCurrentUserStatus("online");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        updateCurrentUserStatus("offline");
     }
 
     @Override
@@ -86,15 +122,20 @@ public class HomeFragment extends Fragment {
         if (chatRecentAdapter != null) {
             chatRecentAdapter.stopListening();
         }
+        updateCurrentUserStatus("offline");
     }
 
     @SuppressLint("NotifyDataSetChanged")
     @Override
-    public  void onResume(){
+    public void onResume() {
         super.onResume();
-        if(chatRecentAdapter!=null){
+        if (chatRecentAdapter != null) {
             chatRecentAdapter.notifyDataSetChanged();
         }
+        updateCurrentUserStatus("online");
     }
+
+
+
 
 }

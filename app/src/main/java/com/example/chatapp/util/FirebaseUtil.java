@@ -1,6 +1,7 @@
 package com.example.chatapp.util;
 
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -11,8 +12,6 @@ import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
 import java.util.List;
-import java.util.TimerTask;
-import java.util.logging.SimpleFormatter;
 
 public class FirebaseUtil {
 
@@ -77,6 +76,10 @@ public class FirebaseUtil {
 
     public static void logout(){
         FirebaseAuth.getInstance().signOut();
+    }
+
+    public static Task<Void> updateStatusUser(String userId, String status){
+        return FirebaseFirestore.getInstance().collection("users").document(userId).update("status",status);
     }
 
 

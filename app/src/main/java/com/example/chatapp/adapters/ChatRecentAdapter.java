@@ -44,6 +44,7 @@ public class ChatRecentAdapter extends FirestoreRecyclerAdapter<ChatRoomModel, C
                 if (messageText.length() > max_length) {
                     messageText = messageText.substring(0, max_length) + " ...";
                 }
+
                 if (lassMessSentByMe) {
                     holder.txtLastChat.setText(String.format("Bạn: %s", messageText));
                 }
@@ -55,6 +56,16 @@ public class ChatRecentAdapter extends FirestoreRecyclerAdapter<ChatRoomModel, C
                 Glide.with(holder.itemView.getContext())
                             .load(searchUserModel.getAvatar())
                             .into(holder.imgAvatar);
+
+                if ("online".equals(searchUserModel.getStatus())) {
+                    holder.imgStatus.setVisibility(View.VISIBLE);
+                    holder.imgStatus1.setVisibility(View.VISIBLE);
+
+                } else {
+                    holder.imgStatus.setVisibility(View.GONE);
+                    holder.imgStatus1.setVisibility(View.GONE);
+
+                }
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -79,7 +90,7 @@ public class ChatRecentAdapter extends FirestoreRecyclerAdapter<ChatRoomModel, C
     // ViewHolder class
     public static class ChatRecentViewHolder extends RecyclerView.ViewHolder {
         TextView txtName, txtLastChat, txtTimeChat;
-        ImageView imgAvatar;
+        ImageView imgAvatar,imgStatus,imgStatus1;
 
         public ChatRecentViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -87,6 +98,9 @@ public class ChatRecentAdapter extends FirestoreRecyclerAdapter<ChatRoomModel, C
             txtLastChat = itemView.findViewById(R.id.txtLastChat);
             txtTimeChat = itemView.findViewById(R.id.txtTimeChat);
             imgAvatar = itemView.findViewById(R.id.imgAvatar);
+            imgStatus=itemView.findViewById(R.id.imgStatus);
+            imgStatus1=itemView.findViewById(R.id.imgStatus1);
+
         }
     }
 }

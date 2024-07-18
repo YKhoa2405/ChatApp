@@ -96,6 +96,7 @@ public class SignupActivity extends AppCompatActivity {
         user.put("created_at", System.currentTimeMillis());
         user.put("user_name",userName);
         user.put("avatar", "https://res.cloudinary.com/dsbebvfff/image/upload/v1720890023/user-profile-icon-free-vector_xcepte.jpg");
+        user.put("status","online");
 
 
         FirebaseUtil.currentUserDetail().set(user);

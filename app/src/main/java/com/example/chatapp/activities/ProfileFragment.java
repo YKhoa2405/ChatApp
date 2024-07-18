@@ -47,6 +47,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 FirebaseUtil.logout();
+                FirebaseUtil.updateStatusUser(currentUserModel.getUserId(),"offline");
                 Intent intent = new Intent(getContext(), WelcomeActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);

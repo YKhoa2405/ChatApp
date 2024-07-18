@@ -44,6 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private ImageButton loginGoogle,btnGoBack;
     private TextView forgotPass;
+    private SearchUserActivity currentUserModel;
 
 
 
@@ -80,6 +81,7 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(AuthResult authResult) {
                             startActivity(new Intent(LoginActivity.this,MainActivity.class));
+
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -155,8 +157,6 @@ public class LoginActivity extends AppCompatActivity {
                         saveUserInfoFireStore(user);
                         startActivity(new Intent(LoginActivity.this,MainActivity.class));
 
-                        // Sign in success, update UI with the signed-in user's information
-                        // Update UI or start a new activity
                     } else {
                         // If sign in fails, display a message to the user.
                         StyleableToast.makeText(LoginActivity.this, "Đăng nhập thất bại", R.style.errorToast).show();
@@ -178,6 +178,7 @@ public class LoginActivity extends AppCompatActivity {
             userData.put("created_at", System.currentTimeMillis());
             userData.put("avatar",avatarUrl);
             userData.put("user_name",userName);
+            userData.put("status","online");
 
 
             FirebaseUtil.currentUserDetail().set(userData);

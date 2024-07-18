@@ -36,11 +36,15 @@ public class SearchUserAdapter extends FirestoreRecyclerAdapter<SearchUserModel,
         if(model.getUserId().equals(FirebaseUtil.currentUserUid())){
             holder.txtNameSearch.setText(String.format("%s(Tôi)", model.getUser_name()));
         }
+        Glide.with(holder.itemView.getContext())
+                .load(model.getAvatar())
+                .into(holder.imgAvatarSearch);
 
-        if (model.getAvatar() != null && !model.getAvatar().isEmpty()) {
-            Glide.with(holder.itemView.getContext())
-                    .load(model.getAvatar())
-                    .into(holder.imgAvatarSearch);
+
+        if ("online".equals(model.getStatus())) {
+            holder.imgStatus.setVisibility(View.VISIBLE);
+        } else {
+            holder.imgStatus.setVisibility(View.GONE);
         }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -62,7 +66,7 @@ public class SearchUserAdapter extends FirestoreRecyclerAdapter<SearchUserModel,
     }
 
     static class UserViewHolder extends RecyclerView.ViewHolder {
-        ImageView imgAvatarSearch;
+        ImageView imgAvatarSearch,imgStatus;
         TextView txtNameSearch, txtStatusSearch;
 
         UserViewHolder(@NonNull View itemView) {
@@ -70,6 +74,8 @@ public class SearchUserAdapter extends FirestoreRecyclerAdapter<SearchUserModel,
             imgAvatarSearch = itemView.findViewById(R.id.imgAvatarSearch);
             txtNameSearch = itemView.findViewById(R.id.txtNameSearch);
             txtStatusSearch = itemView.findViewById(R.id.txtStatusSearch);
+            imgStatus = itemView.findViewById(R.id.imgStatus);
+
         }
     }
 }
