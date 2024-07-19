@@ -150,7 +150,6 @@ public class ChatDetailActivity extends AppCompatActivity {
             chatRoomModel.setLassMessageText("Đã gửi một hình ảnh");
         }
 
-
 //        Lưu thông tin cập nhật
         FirebaseUtil.getChatRooms(chatRoomId).set(chatRoomModel);
 //        Đối tượng tin nhắn mới

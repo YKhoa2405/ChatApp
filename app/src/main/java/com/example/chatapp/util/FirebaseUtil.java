@@ -27,6 +27,12 @@ public class FirebaseUtil {
         return  FirebaseFirestore.getInstance().collection("users");
     }
 
+    // lấy tất cả bạn bè của user đang đăng nhập
+    public static  CollectionReference allFriendUserCollection(String userId){
+        return FirebaseFirestore.getInstance().collection("users").document(userId).collection("friends");
+    }
+
+
 //    Lấy phòng chat
     public static  DocumentReference getChatRooms(String chatRoomId){
         return FirebaseFirestore.getInstance().collection("chatRooms").document(chatRoomId);
@@ -37,6 +43,10 @@ public class FirebaseUtil {
         return getChatRooms(chaRoomId).collection("chats");
     }
 
+//    Lấy chi tiết user
+    public static CollectionReference getUserToFriend(){
+        return currentUserDetail().collection("friends");
+    }
 
     public static String getChatRoomId(String userId1,String userId2){
 //        hashCode trả về mã số nguyên đại diện cho 1 userId
@@ -54,7 +64,7 @@ public class FirebaseUtil {
     }
 
 //    Lấy ra thông tin của user bản thân đang nhắn tin
-    public static DocumentReference getOrtherUserFromChatRoom(List<String> userIds){
+    public static DocumentReference getOtherUserFromChatRoom(List<String> userIds){
         if(userIds.get(0).equals(FirebaseUtil.currentUserUid())){
             return  allUserCollection().document(userIds.get(1));
         } else{

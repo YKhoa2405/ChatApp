@@ -18,6 +18,7 @@
         android:id="@+id/bottomBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:baselineAligned="false"
         android:weightSum="4"
         android:padding="10dp"
         android:elevation="10dp"
@@ -67,7 +68,8 @@
             android:paddingEnd="5dp"
             android:layout_weight="1"
             android:layout_gravity="center"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            tools:ignore="UseCompoundDrawables">
 
             <ImageView
                 android:id="@+id/contactImage"
@@ -86,7 +88,7 @@
                 android:textStyle="bold"
                 android:textColor="@color/white"
                 android:layout_marginStart="10dp"
-                android:text="Liên hệ" />
+                android:text="Bạn bè" />
         </LinearLayout>
 
         <LinearLayout

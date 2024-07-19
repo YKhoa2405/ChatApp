@@ -32,7 +32,7 @@ public class ChatRecentAdapter extends FirestoreRecyclerAdapter<ChatRoomModel, C
 
     @Override
     protected void onBindViewHolder(@NonNull ChatRecentViewHolder holder, int position, @NonNull ChatRoomModel model) {
-        FirebaseUtil.getOrtherUserFromChatRoom(model.getUserIds()).get().addOnCompleteListener(task -> {
+        FirebaseUtil.getOtherUserFromChatRoom(model.getUserIds()).get().addOnCompleteListener(task -> {
             if(task.isSuccessful()){
                 boolean lassMessSentByMe = model.getLastMessageSenderId().equals(FirebaseUtil.currentUserUid());
                 int max_length = 40;
