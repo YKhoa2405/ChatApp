@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/backgroundColor"
     android:paddingBottom="16dp"
     android:gravity="center"
     android:orientation="vertical">
@@ -12,7 +11,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/white"
+        android:textColor="@color/backgroundColor"
         android:paddingBottom="20dp"
         android:textSize="68sp"
         android:textStyle="bold"
@@ -23,7 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Ứng dụng trò chuyện của chúng tôi là cách hoàn hảo để duy trì kết nối với bạn bè và gia đình"
-        android:textColor="@color/buttonColor"
+        android:textColor="@color/black"
         android:textSize="18sp"
         android:paddingHorizontal="20dp"
         android:paddingBottom="20dp"/>
@@ -42,8 +41,7 @@
             android:layout_margin="10dp"
             app:srcCompat="@drawable/google"
             android:padding="8dp"
-
-            android:background="@color/backgroundColor"
+            android:background="?actionBarItemBackground"
             android:contentDescription="@string/login_google_desc"
             android:scaleType="fitCenter"/>
 
@@ -67,7 +65,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:textSize="16sp"
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textStyle="bold"
             />
         <View
@@ -77,16 +75,15 @@
             android:background="@color/buttonColor"/>
     </LinearLayout>
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSignUp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_shape"
         android:text="Đăng ký với Email"
-        android:paddingVertical="14dp"
         android:backgroundTint="@color/backgroundColor"
+        android:textSize="22sp"
         android:layout_marginHorizontal="20dp"
-        android:textSize="22sp" />
+        android:paddingVertical="16dp"/>
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -98,7 +95,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Tài khoản hiện tại? "
-            android:textColor="@color/white"
+            android:textColor="@color/black"
             android:textSize="16sp" />
 
         <TextView
@@ -106,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Đăng nhập"
-            android:textColor="@color/white"
+            android:textColor="@color/backgroundColor"
             android:textStyle="bold"
             android:textSize="16sp" />
     </LinearLayout>

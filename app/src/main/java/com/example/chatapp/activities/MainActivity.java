@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
 
             binding.homeTxt.setVisibility(View.VISIBLE);
             binding.homeLayout.setBackgroundResource(R.drawable.bottom_naviga_round);
-            binding.homeImage.setBackgroundColor(getResources().getColor(R.color.white));
         }
 
 
@@ -55,7 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
                     binding.homeTxt.setVisibility(View.VISIBLE);
                     binding.homeLayout.setBackgroundResource(R.drawable.bottom_naviga_round);
-                    binding.homeImage.setBackgroundColor(getResources().getColor(R.color.white));
 
 
                     binding.profileLayout.setBackgroundColor(getResources().getColor(R.color.white));
@@ -88,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
 
                     binding.contactTxt.setVisibility(View.VISIBLE);
                     binding.contactLayout.setBackgroundResource(R.drawable.bottom_naviga_round);
-                    binding.contactImage.setBackgroundColor(getResources().getColor(R.color.white));
 
                     binding.profileLayout.setBackgroundColor(getResources().getColor(R.color.white));
                     binding.homeLayout.setBackgroundColor(getResources().getColor(R.color.white));
@@ -121,7 +118,6 @@ public class MainActivity extends AppCompatActivity {
 
                     binding.profileTxt.setVisibility(View.VISIBLE);
                     binding.profileLayout.setBackgroundResource(R.drawable.bottom_naviga_round);
-                    binding.profileImage.setBackgroundColor(getResources().getColor(R.color.white));
 
 
                     binding.homeLayout.setBackgroundColor(getResources().getColor(R.color.white));

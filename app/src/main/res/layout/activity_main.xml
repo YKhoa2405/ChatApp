@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:layout_marginStart="10dp"
                 android:text="Trang chủ" />
         </LinearLayout>
@@ -86,7 +86,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:layout_marginStart="10dp"
                 android:text="Bạn bè" />
         </LinearLayout>
@@ -118,7 +118,7 @@
                 android:layout_marginStart="10dp"
                 android:text="Hồ sơ"
                 android:textSize="16sp"
-                android:textColor="@color/white"
+                android:textColor="@color/black"
                 android:textStyle="bold"
                 android:visibility="gone" />
         </LinearLayout>

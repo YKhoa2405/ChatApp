@@ -31,7 +31,10 @@ public class FirebaseUtil {
     public static  CollectionReference allFriendUserCollection(String userId){
         return FirebaseFirestore.getInstance().collection("users").document(userId).collection("friends");
     }
-
+    //    Lấy chi tiết user
+    public static CollectionReference getUserToFriend(){
+        return currentUserDetail().collection("friends");
+    }
 
 //    Lấy phòng chat
     public static  DocumentReference getChatRooms(String chatRoomId){
@@ -43,10 +46,7 @@ public class FirebaseUtil {
         return getChatRooms(chaRoomId).collection("chats");
     }
 
-//    Lấy chi tiết user
-    public static CollectionReference getUserToFriend(){
-        return currentUserDetail().collection("friends");
-    }
+
 
     public static String getChatRoomId(String userId1,String userId2){
 //        hashCode trả về mã số nguyên đại diện cho 1 userId
@@ -88,10 +88,12 @@ public class FirebaseUtil {
         FirebaseAuth.getInstance().signOut();
     }
 
-    public static Task<Void> updateStatusUser(String userId, String status){
+    public static Task<Void> UpdateStatusUser(String userId, String status){
         return FirebaseFirestore.getInstance().collection("users").document(userId).update("status",status);
     }
 
-
+    public static Task<Void> UpdateSeenByMessage(String chatRoomId,String userId){
+        return FirebaseFirestore.getInstance().collection("chatRooms").document(chatRoomId).collection("chats").document(userId).update("seenBy",true);
+    }
 
 }

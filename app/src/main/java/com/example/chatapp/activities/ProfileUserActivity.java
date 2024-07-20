@@ -16,6 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.chatapp.R;
+import com.example.chatapp.model.FriendModel;
 import com.example.chatapp.model.SearchUserModel;
 import com.example.chatapp.util.AndroidUtil;
 import com.example.chatapp.util.FirebaseUtil;
@@ -60,7 +61,7 @@ public class ProfileUserActivity extends AppCompatActivity {
         addFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                SearchUserModel userFriend = new SearchUserModel(otherUser.getUser_name(),otherUser.getAvatar(),otherUser.getEmail(),otherUser.getUserId(),otherUser.getStatus());
+                FriendModel userFriend = new FriendModel(otherUser.getUserId(),"friend");
                 FirebaseUtil.getUserToFriend().add(userFriend).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
                     @Override
                     public void onComplete(@NonNull Task<DocumentReference> task) {

@@ -37,7 +37,13 @@ public class ListFriendAdapter extends FirestoreRecyclerAdapter<SearchUserModel,
         Glide.with(holder.itemView.getContext())
                 .load(model.getAvatar())
                 .into(holder.imgAvatarSearch);
+        if ("online".equals(model.getStatus())) {
+            holder.imgStatus.setVisibility(View.VISIBLE);
 
+        } else {
+            holder.imgStatus.setVisibility(View.GONE);
+
+        }
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

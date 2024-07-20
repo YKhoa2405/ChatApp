@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="96dp"
         android:text="Đăng ký với Email"
-        android:textColor="@color/textColor"
+        android:textColor="@color/backgroundColor"
         android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +51,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
         android:text="Tên của bạn"
-        android:textColor="@color/textColor"
+        android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,7 +79,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Email"
-        android:textColor="@color/textColor"
+        android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
@@ -105,7 +105,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Mật khẩu"
-        android:textColor="@color/textColor"
+        android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/txtEmail"
@@ -131,7 +131,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="Nhập lại mật khẩu"
-        android:textColor="@color/textColor"
+        android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/textPass"
@@ -151,20 +151,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/txtConfigPass" />
 
-    <Button
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSignUp"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="Đăng ký"
+        android:backgroundTint="@color/backgroundColor"
+        android:textSize="22sp"
+        android:layout_marginHorizontal="20dp"
+        android:paddingVertical="16dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
-        android:background="@drawable/button_shape"
-        android:text="Đăng ký"
-        android:textSize="22sp"
-        android:paddingVertical="14dp"
         app:layout_constraintBottom_toTopOf="@+id/forgotPass"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"/>
+
 
     <TextView
         android:id="@+id/forgotPass"
@@ -172,7 +176,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="64dp"
         android:text="Quên mật khẩu?"
-        android:textColor="@color/textColor"
+        android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

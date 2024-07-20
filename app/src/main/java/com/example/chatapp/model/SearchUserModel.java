@@ -8,13 +8,15 @@ public class SearchUserModel {
     private String userId;
     private String email;
     private String status; // Thêm trường trạng thái
+    private String bio;
 
-    public SearchUserModel(String user_name, String avatar, String email, String userId, String status) {
+    public SearchUserModel(String user_name, String avatar, String email, String userId, String status,String bio) {
         this.user_name = user_name;
         this.avatar = avatar;
         this.email = email;
         this.userId = userId;
         this.status = status; // Khởi tạo trạng thái
+        this.bio = bio;
     }
 
     public SearchUserModel() {
@@ -61,5 +63,13 @@ public class SearchUserModel {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 }

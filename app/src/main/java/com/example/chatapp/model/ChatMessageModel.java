@@ -8,14 +8,18 @@ public class ChatMessageModel {
     private Timestamp timestamp;
     private int messageMethod;
 
+
+    private boolean seenBy;
+
     public ChatMessageModel(){};
 
 
-    public ChatMessageModel(String senderId, String message, Timestamp timestamp, int messageMethod) {
+    public ChatMessageModel(String senderId, String message, Timestamp timestamp, int messageMethod,boolean seenBy) {
         this.senderId = senderId;
         this.message = message;
         this.timestamp = timestamp;
         this.messageMethod=messageMethod;
+        this.seenBy =seenBy;
     }
 
     public String getMessage() {
@@ -50,5 +54,12 @@ public class ChatMessageModel {
         this.messageMethod = messageMethod;
     }
 
+    public boolean isSeenBy() {
+        return seenBy;
+    }
+
+    public void setSeenBy(boolean seenBy) {
+        this.seenBy = seenBy;
+    }
 
 }

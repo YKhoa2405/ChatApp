@@ -2,12 +2,13 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="backgroundColor">#141e30</color>
+    <color name="backgroundColor">#f49d24</color>
     <color name="buttonColor">#6d717e</color>
-    <color name="textColor">#3D4A7A</color>
+<!--    <color name="textColor">#3D4A7A</color>-->
     <color name="chatColor">#eff4f7</color>
-    <color name="chatColorMe">#3d4a7a</color>
+<!--    <color name="chatColorMe">#3d4a7a</color>-->
     <color name="edtColor">#f3f6f6</color>
+    <color name="red">#FF0000</color>
 
 
 </resources>

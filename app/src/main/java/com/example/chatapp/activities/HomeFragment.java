@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -82,7 +83,7 @@ public class HomeFragment extends Fragment {
             if (task.isSuccessful() && task.getResult() != null) {
                 currentUserModel = task.getResult().toObject(SearchUserModel.class);
                 if (currentUserModel != null) {
-                    FirebaseUtil.updateStatusUser(currentUserModel.getUserId(), status);
+                    FirebaseUtil.UpdateStatusUser(currentUserModel.getUserId(), status);
                 }
             }
         });

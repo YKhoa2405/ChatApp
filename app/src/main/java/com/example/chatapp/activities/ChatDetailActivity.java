@@ -52,7 +52,6 @@ import io.github.muddz.styleabletoast.StyleableToast;
 
 public class ChatDetailActivity extends AppCompatActivity {
 
-    private static final int PICK_IMAGE_REQUEST = 1;
 
     String chatRoomId;
     SearchUserModel otherUser;
@@ -153,7 +152,7 @@ public class ChatDetailActivity extends AppCompatActivity {
 //        Lưu thông tin cập nhật
         FirebaseUtil.getChatRooms(chatRoomId).set(chatRoomModel);
 //        Đối tượng tin nhắn mới
-        ChatMessageModel chatMessageModel = new ChatMessageModel(FirebaseUtil.currentUserUid(),message, Timestamp.now(),methodMess);
+        ChatMessageModel chatMessageModel = new ChatMessageModel(FirebaseUtil.currentUserUid(),message, Timestamp.now(),methodMess,false);
 
         FirebaseUtil.getChatRoomMessage(chatRoomId).add(chatMessageModel).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
             @Override

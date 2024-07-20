@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:background="?attr/selectableItemBackground"
-            app:srcCompat="@drawable/baseline_arrow_back_24" />
+            app:srcCompat="@drawable/baseline_arrow_back_24_black" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cardView"

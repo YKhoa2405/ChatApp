@@ -40,8 +40,7 @@ public class ChatRecentAdapter extends FirestoreRecyclerAdapter<ChatRoomModel, C
 
                 SearchUserModel searchUserModel=task.getResult().toObject(SearchUserModel.class);
 
-
-                if (messageText.length() > max_length) {
+                if (messageText!=null && messageText.length() > max_length) {
                     messageText = messageText.substring(0, max_length) + " ...";
                 }
 
@@ -51,6 +50,8 @@ public class ChatRecentAdapter extends FirestoreRecyclerAdapter<ChatRoomModel, C
                 else{
                     holder.txtLastChat.setText(String.format(messageText));
                 }
+
+                assert searchUserModel != null;
                 holder.txtName.setText(searchUserModel.getUser_name());
                 holder.txtTimeChat.setText(FirebaseUtil.timestampToStringFormat(model.getLassMessageTimestamp()));
                 Glide.with(holder.itemView.getContext())
@@ -70,15 +71,18 @@ public class ChatRecentAdapter extends FirestoreRecyclerAdapter<ChatRoomModel, C
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        FirebaseUtil.UpdateSeenByMessage(model.getChatRoomId(),FirebaseUtil.currentUserUid());
                         Intent intent = new Intent(context, ChatDetailActivity.class);
                         AndroidUtil.passUserModelAsIntent(intent,searchUserModel);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
+
                     }
                 });
             }
         });
     }
+
 
     @NonNull
     @Override
