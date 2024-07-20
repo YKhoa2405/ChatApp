@@ -41,10 +41,10 @@
             android:id="@+id/txtBio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
+            android:textSize="14sp"
+            android:textStyle="italic"
             android:textColor="@color/white"
-            android:layout_marginTop="4dp"
-            android:text="TextView" />
+            android:layout_marginTop="4dp" />
 
     </LinearLayout>
     <LinearLayout

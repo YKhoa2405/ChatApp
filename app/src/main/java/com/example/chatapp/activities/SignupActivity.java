@@ -69,7 +69,7 @@ public class SignupActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                saveUserInfoToFirestore(user,useName);
+                                saveUserInfoToFireStore(user,useName);
                                 StyleableToast.makeText(SignupActivity.this, "Đăng ký tài khoản thành công", R.style.successToast).show();
                                 startActivity(new Intent(SignupActivity.this, LoginActivity.class));
                             } else {
@@ -89,7 +89,7 @@ public class SignupActivity extends AppCompatActivity {
         });
     }
 
-    private void saveUserInfoToFirestore(String email, String userName) {
+    private void saveUserInfoToFireStore(String email, String userName) {
         Map<String, Object> user = new HashMap<>();
         user.put("email", email);
         user.put("userId", FirebaseUtil.currentUserUid());
@@ -97,6 +97,7 @@ public class SignupActivity extends AppCompatActivity {
         user.put("user_name",userName);
         user.put("avatar", "https://res.cloudinary.com/dsbebvfff/image/upload/v1720890023/user-profile-icon-free-vector_xcepte.jpg");
         user.put("status","online");
+        user.put("bio","null");
 
 
         FirebaseUtil.currentUserDetail().set(user);

@@ -10,6 +10,7 @@
         android:id="@+id/topBar"
         android:layout_width="match_parent"
         android:layout_height="70dp"
+        android:paddingTop="20dp"
         android:orientation="horizontal"
         android:background="@color/backgroundColor"
         android:gravity="center_vertical">
@@ -119,7 +120,7 @@
         android:backgroundTint="@color/backgroundColor"
         android:textSize="22sp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginBottom="60dp"
         android:layout_marginHorizontal="20dp"
         android:paddingVertical="16dp"/>
 </RelativeLayout>

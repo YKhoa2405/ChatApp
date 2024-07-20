@@ -179,6 +179,7 @@ public class LoginActivity extends AppCompatActivity {
             userData.put("avatar",avatarUrl);
             userData.put("user_name",userName);
             userData.put("status","online");
+            userData.put("bio","null");
 
 
             FirebaseUtil.currentUserDetail().set(userData);

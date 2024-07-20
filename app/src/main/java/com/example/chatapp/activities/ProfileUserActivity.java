@@ -57,6 +57,12 @@ public class ProfileUserActivity extends AppCompatActivity {
         Glide.with(this).load(otherUser.getAvatar()).into(imgAvatar);
         txtEmail.setText(otherUser.getEmail());
         txtUserId.setText(otherUser.getUserId());
+        if(otherUser.getBio().equals("null")){
+            txtBio.setVisibility(View.GONE);
+
+        }else{
+            txtBio.setText(otherUser.getBio());
+        }
 
         addFriend.setOnClickListener(new View.OnClickListener() {
             @Override

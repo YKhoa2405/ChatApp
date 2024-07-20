@@ -83,6 +83,12 @@ public class FirebaseUtil {
             .child(chatRoomId)
             .child(System.currentTimeMillis() + ".jpg");
     }
+    public static StorageReference getStorageReferenceImageToUser(String userId) {
+        // Tạo một tham chiếu đến vị trí lưu trữ trong Firebase Storage
+        return FirebaseStorage.getInstance().getReference("chat_images")
+                .child(FirebaseUtil.currentUserUid())
+                .child(System.currentTimeMillis() + ".jpg");
+    }
 
     public static void logout(){
         FirebaseAuth.getInstance().signOut();

@@ -12,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.SearchView;
+import android.widget.TextView;
 
 import com.example.chatapp.R;
 import com.example.chatapp.adapters.ListFriendAdapter;
@@ -33,9 +35,11 @@ import java.util.List;
 public class ContactFragment extends Fragment {
 
 
-    CardView btnAddFriend,btnSearchFriend;
+    CardView btnAddFriend;
+    SearchView btnSearchFriend;
     RecyclerView recyclerListFriend;
     ListFriendAdapter adapter;
+    TextView emptyTextView;
 
     public ContactFragment() {
     }
@@ -48,8 +52,23 @@ public class ContactFragment extends Fragment {
         btnAddFriend = view.findViewById(R.id.btnAddFriend);
         btnSearchFriend=view.findViewById(R.id.btnSearchFriend);
         recyclerListFriend =view.findViewById(R.id.recycleListFriend);
+        emptyTextView = view.findViewById(R.id.emptyTextView);
 
         getFriendIds();
+
+//        btnSearchFriend.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                searchFriends(query);
+//                return false;
+//            }
+//
+//            @Override
+//            public boolean onQueryTextChange(String nextText) {
+//                searchFriends(nextText);
+//                return false;
+//            }
+//        });
 
 
         return  view;
@@ -73,6 +92,15 @@ public class ContactFragment extends Fragment {
 
 
     void setupRecycleListFriend(List<String> friendIds){
+        if (friendIds == null || friendIds.isEmpty()) {
+            recyclerListFriend.setVisibility(View.GONE);
+            emptyTextView.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        recyclerListFriend.setVisibility(View.VISIBLE);
+        emptyTextView.setVisibility(View.GONE);
+
         Query query = FirebaseUtil.allUserCollection().whereIn(FieldPath.documentId(),friendIds);
 
         FirestoreRecyclerOptions<SearchUserModel> options = new FirestoreRecyclerOptions.Builder<SearchUserModel>()
@@ -93,6 +121,38 @@ public class ContactFragment extends Fragment {
         // Start listening for changes
         adapter.startListening();
     }
+
+//    void searchFriends(String searchText) {
+//        if (searchText == null || searchText.isEmpty()) {
+//            getFriendIds(); // If search text is empty, get all friends
+//            return;
+//        }
+//
+//        // Query to search users based on the searchText
+//        Query query = FirebaseUtil.allUserCollection()
+//                .whereIn(FieldPath.documentId(), getFriendIds())
+//                .whereGreaterThanOrEqualTo("userName", searchText)
+//                .whereLessThan("userName", searchText + '\uf8ff');
+//
+//        FirestoreRecyclerOptions<SearchUserModel> options = new FirestoreRecyclerOptions.Builder<SearchUserModel>()
+//                .setQuery(query, SearchUserModel.class)
+//                .build();
+//
+//        if (adapter != null) {
+//            adapter.stopListening();
+//        }
+//
+//        // Create the adapter with the filtered options
+//        adapter = new ListFriendAdapter(options, getContext());
+//        recyclerListFriend.setLayoutManager(new LinearLayoutManager(getContext()));
+//
+//        // Set up the RecyclerView
+//        recyclerListFriend.setAdapter(adapter);
+//
+//        // Start listening for changes
+//        adapter.startListening();
+//    }
+
 
     @Override
     public void onStop() {

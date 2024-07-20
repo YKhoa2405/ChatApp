@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.chatapp.R;
 import com.example.chatapp.model.SearchUserModel;
+import com.example.chatapp.util.AndroidUtil;
 import com.example.chatapp.util.FirebaseUtil;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -56,7 +57,10 @@ public class ProfileFragment extends Fragment {
         });
 
         btnEditProfile.setOnClickListener(t->{
-            startActivity(new Intent(getContext(), EditProfileActivity.class));
+            Intent intent = new Intent(getContext(), EditProfileActivity.class);
+            AndroidUtil.passUserModelAsIntent(intent,currentUserModel);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
         });
         return  view;
     }
@@ -65,7 +69,13 @@ public class ProfileFragment extends Fragment {
         FirebaseUtil.currentUserDetail().get().addOnCompleteListener(task->{
             currentUserModel= task.getResult().toObject(SearchUserModel.class);
             txtUserName.setText(currentUserModel.getUser_name());
-            txtBio.setText(currentUserModel.getEmail());
+            if(currentUserModel.getBio().equals("null")){
+                txtBio.setVisibility(View.GONE);
+
+            }else{
+                txtBio.setText(currentUserModel.getBio());
+            }
+
             Glide.with(this)
                     .load(currentUserModel.getAvatar())
                     .into(imgAvatar);
