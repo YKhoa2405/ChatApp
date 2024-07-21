@@ -1,8 +1,10 @@
 package com.example.chatapp.model;
 
+import com.google.firebase.Timestamp;
+
 public class FriendModel {
     private String userId;
-    private String status;
+    private Timestamp create_add_friend;
 
     public FriendModel() {
     }
@@ -15,18 +17,18 @@ public class FriendModel {
         this.userId = userId;
     }
 
-    public String getStatus() {
-        return status;
+    public Timestamp getCreate_add_friend() {
+        return create_add_friend;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setCreate_add_friend(Timestamp create_add_friend) {
+        this.create_add_friend = create_add_friend;
     }
 
 
-    public FriendModel(String userId, String status) {
+    public FriendModel(String userId, Timestamp create_add_friend) {
         this.userId = userId;
-        this.status = status;
+        this.create_add_friend = create_add_friend;
     }
 
 

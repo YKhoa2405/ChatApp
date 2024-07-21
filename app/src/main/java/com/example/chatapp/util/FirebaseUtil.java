@@ -31,9 +31,15 @@ public class FirebaseUtil {
     public static  CollectionReference allFriendUserCollection(String userId){
         return FirebaseFirestore.getInstance().collection("users").document(userId).collection("friends");
     }
-    //    Lấy chi tiết user
-    public static CollectionReference getUserToFriend(){
-        return currentUserDetail().collection("friends");
+//    Lấy ra danh sách yêu cầu kết bạn friendRequest
+    public static  CollectionReference allFriendRequestCollection(String userId){
+        return FirebaseFirestore.getInstance().collection("users").document(userId).collection("friendRequest");
+    }
+
+
+    // Thêm id của người nhận vào sub friendRequest của người gửi, để biết mình đã gửi yêu cầu cho những ai
+    public static CollectionReference addUserToSendFriendRequest(){
+        return FirebaseFirestore.getInstance().collection("users").document(FirebaseUtil.currentUserUid()).collection("sentFriendRequest");
     }
 
 //    Lấy phòng chat
@@ -45,7 +51,6 @@ public class FirebaseUtil {
     public static CollectionReference getChatRoomMessage(String chaRoomId){
         return getChatRooms(chaRoomId).collection("chats");
     }
-
 
 
     public static String getChatRoomId(String userId1,String userId2){
@@ -83,9 +88,11 @@ public class FirebaseUtil {
             .child(chatRoomId)
             .child(System.currentTimeMillis() + ".jpg");
     }
+
+//    Tải hình ảnh user, avatar
     public static StorageReference getStorageReferenceImageToUser(String userId) {
         // Tạo một tham chiếu đến vị trí lưu trữ trong Firebase Storage
-        return FirebaseStorage.getInstance().getReference("chat_images")
+        return FirebaseStorage.getInstance().getReference("user_images")
                 .child(FirebaseUtil.currentUserUid())
                 .child(System.currentTimeMillis() + ".jpg");
     }

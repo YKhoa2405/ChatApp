@@ -16,7 +16,20 @@
         android:gravity="center"
         android:orientation="horizontal">
 
-
+        <androidx.cardview.widget.CardView
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            app:cardCornerRadius="26dp"
+            android:layout_gravity="center"
+            android:layout_marginStart="20dp"
+            android:backgroundTint="@color/buttonColor">
+            <ImageButton
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:background="?actionBarItemBackground"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_add_friend" />
+        </androidx.cardview.widget.CardView>
 
 
         <TextView
@@ -31,7 +44,6 @@
             android:text="Bạn bè" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/btnAddFriend"
             android:layout_width="44dp"
             android:layout_height="44dp"
             app:cardCornerRadius="26dp"
@@ -39,6 +51,7 @@
             android:layout_marginEnd="20dp"
             android:backgroundTint="@color/buttonColor">
             <ImageButton
+                android:id="@+id/btnAddFriend"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
                 android:background="?actionBarItemBackground"
@@ -74,7 +87,7 @@
             android:textStyle="bold"
             android:paddingStart="20dp"
             android:paddingTop="10dp"
-            android:paddingBottom="20dp"
+            android:paddingBottom="10dp"
             android:text="Bạn bè của tôi"
             tools:ignore="RtlSymmetry" />
 

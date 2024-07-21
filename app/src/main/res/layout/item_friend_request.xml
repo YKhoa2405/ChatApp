@@ -5,42 +5,32 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingHorizontal="20dp"
-    android:paddingTop="8dp">
+    android:paddingTop="6dp">
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardAvatar"
         android:layout_width="52dp"
         android:layout_height="52dp"
         app:cardCornerRadius="26dp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
-            android:id="@+id/imgAvatarSearch"
+            android:id="@+id/imgAvatar"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="fitXY" />
     </androidx.cardview.widget.CardView>
 
-    <ImageView
-        android:id="@+id/imgStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:visibility="gone"
-        app:srcCompat="@drawable/circle_shape" />
 
     <TextView
-        android:id="@+id/txtNameSearch"
+        android:id="@+id/txtUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
         android:textSize="20sp"
         android:textStyle="bold"
+        android:text="fdsfsdfs"
         app:layout_constraintStart_toEndOf="@+id/cardAvatar"
         app:layout_constraintTop_toTopOf="@+id/cardAvatar" />
 
@@ -49,21 +39,46 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
         android:textColor="@color/buttonColor"
+        android:text="Đã gửi lời mời kết bạn"
         app:layout_constraintBottom_toBottomOf="@+id/cardAvatar"
         app:layout_constraintStart_toEndOf="@+id/cardAvatar"
-        app:layout_constraintTop_toBottomOf="@+id/txtNameSearch" />
+        app:layout_constraintTop_toBottomOf="@+id/txtUserName" />
+
+    <Button
+        android:id="@+id/btnRefuse"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:backgroundTint="@color/buttonColor"
+        android:text="Từ chối"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="@+id/txtStatusSearch"
+        app:layout_constraintTop_toBottomOf="@+id/cardAvatar" />
+
+    <Button
+        android:id="@+id/btnAccept"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:backgroundTint="@color/backgroundColor"
+        android:text="Đồng ý"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/btnRefuse"
+        app:layout_constraintStart_toEndOf="@+id/btnRefuse"
+        app:layout_constraintTop_toTopOf="@+id/btnRefuse" />
 
 
     <View
         android:id="@+id/divider"
         android:layout_width="0dp"
         android:layout_height="1dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginVertical="8dp"
         android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/txtStatusSearch"
-        app:layout_constraintTop_toBottomOf="@+id/cardAvatar" />
+        app:layout_constraintTop_toBottomOf="@+id/btnRefuse" />
 </androidx.constraintlayout.widget.ConstraintLayout>
