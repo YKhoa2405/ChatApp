@@ -24,6 +24,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 
@@ -36,7 +37,7 @@ public class ProfileUserActivity extends AppCompatActivity {
     TextView txtUserName, txtEmail,txtBio, txtTimeJoin,txtUserId;
     ImageView imgAvatar;
     ImageButton btnGoBack;
-    CardView addFriend;
+    CardView addFriend,btnChat;
     SearchUserModel otherUser;
 
     @Override
@@ -52,6 +53,7 @@ public class ProfileUserActivity extends AppCompatActivity {
         txtUserId =findViewById(R.id.txtUserId);
         imgAvatar =findViewById(R.id.imgAvatar);
         btnGoBack =findViewById(R.id.btnGoBack);
+        btnChat = findViewById(R.id.btnChat);
 
         otherUser = AndroidUtil.getUserModelAsIntent(getIntent());
 
@@ -70,6 +72,8 @@ public class ProfileUserActivity extends AppCompatActivity {
             txtBio.setText(otherUser.getBio());
         }
 
+        checkFriendStatus();
+
         addFriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,42 +81,34 @@ public class ProfileUserActivity extends AppCompatActivity {
                 String receiverUserId = otherUser.getUserId();
                 Timestamp createAddFriend = Timestamp.now();
 
-                // Tạo yêu cầu kết bạn
-                Map<String, Object> friendRequest = new HashMap<>();
-                friendRequest.put("senderId", currentUserUid);
-                friendRequest.put("createAddFriend", createAddFriend);
-
-                // Tạo yêu cầu đã gửi
-                Map<String, Object> sentFriendRequest = new HashMap<>();
-                sentFriendRequest.put("receiverId", receiverUserId);
-                sentFriendRequest.put("createAddFriend", createAddFriend);
-
-                // Lấy instance của Firestore và batch
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                WriteBatch batch = db.batch();
+                FriendModel friendRequest = new FriendModel(currentUserUid, createAddFriend, "pending");
 
                 // Thêm yêu cầu kết bạn vào sub-collection 'friend_request' của người nhận
-                DocumentReference friendRequestRef = FirebaseUtil.allFriendRequestCollection(receiverUserId).document(currentUserUid);
-                batch.set(friendRequestRef, friendRequest);
+                FirebaseUtil.allFriendUserCollection(receiverUserId).document(currentUserUid).set(friendRequest);
 
-                // Thêm yêu cầu đã gửi vào collection 'sentFriendRequest' của người gửi
-                DocumentReference sentRequestRef = FirebaseUtil.addUserToSendFriendRequest().document(receiverUserId);
-                batch.set(sentRequestRef, sentFriendRequest);
+            }
+        });
+    }
+    void checkFriendStatus() {
 
-                // Thực hiện batch
-                batch.commit().addOnCompleteListener(new OnCompleteListener<Void>() {
+        FirebaseUtil.allFriendUserCollection(FirebaseUtil.currentUserUid()).document(otherUser.getUserId()).get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
-                            StyleableToast.makeText(ProfileUserActivity.this, "Yêu cầu kết bạn đã được gửi", R.style.successToast).show();
-                        } else {
-                            StyleableToast.makeText(ProfileUserActivity.this, "Có lỗi xảy ra", R.style.errorToast).show();
+                            DocumentSnapshot document = task.getResult();
+                            if (document.exists()) {
+                                FriendModel friendModel = document.toObject(FriendModel.class);
+                                if (friendModel != null && "friend".equals(friendModel.getStatus())) {
+                                    btnChat.setVisibility(View.VISIBLE);
+                                } else {
+                                    addFriend.setVisibility(View.VISIBLE);
+                                }
+                            }else{
+                                addFriend.setVisibility(View.VISIBLE);
+                            }
                         }
                     }
                 });
-            }
-        });
-
-
     }
 }

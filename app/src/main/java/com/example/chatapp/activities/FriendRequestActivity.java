@@ -27,7 +27,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FriendRequestActivity extends AppCompatActivity {
+public class FriendRequestActivity extends AppCompatActivity implements FriendRequestAdapter.OnFriendRequestUpdateListener {
 
     private RecyclerView recycleFriendRequest;
     private FriendRequestAdapter adapter;
@@ -50,56 +50,58 @@ public class FriendRequestActivity extends AppCompatActivity {
     }
 
     private void getFriendRequestIds() {
-        FirebaseUtil.allFriendRequestCollection(FirebaseUtil.currentUserUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    QuerySnapshot querySnapshot = task.getResult();
-                    if (querySnapshot != null && !querySnapshot.isEmpty()) {
-                        List<String> friendIds = new ArrayList<>();
-                        for (QueryDocumentSnapshot document : querySnapshot) {
-                            String friendId = document.getId(); // Get the ID of the friend request document
-                            friendIds.add(friendId);
+        FirebaseUtil.allFriendUserCollection(FirebaseUtil.currentUserUid())
+                .whereEqualTo("status", "pending")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            QuerySnapshot querySnapshot = task.getResult();
+                            if (querySnapshot != null && !querySnapshot.isEmpty()) {
+                                List<String> friendIds = new ArrayList<>();
+                                for (QueryDocumentSnapshot document : querySnapshot) {
+                                    String friendId = document.getId();
+                                    friendIds.add(friendId);
+                                }
+                                setupRecycleFriendRequest(friendIds);
+                            } else {
+                                setupRecycleFriendRequest(new ArrayList<>());
+                            }
                         }
-                        setupRecycleFriendRequest(friendIds); // Pass the list of friend IDs to the RecyclerView setup method
-                    } else {
-                        setupRecycleFriendRequest(new ArrayList<>()); // Pass an empty list to handle the empty state in the UI
                     }
-                }
-            }
-        });
+                });
     }
 
     private void setupRecycleFriendRequest(List<String> friendIds) {
         if (friendIds == null || friendIds.isEmpty()) {
-            // Khi danh sách rỗng, ẩn RecyclerView và hiển thị TextView thông báo
             recycleFriendRequest.setVisibility(View.GONE);
             emptyTextView.setVisibility(View.VISIBLE);
         } else {
-            // Hiển thị RecyclerView và ẩn TextView thông báo
             recycleFriendRequest.setVisibility(View.VISIBLE);
             emptyTextView.setVisibility(View.GONE);
 
-            // Truy vấn Firestore với danh sách friendIds
             Query query = FirebaseUtil.allUserCollection().whereIn(FieldPath.documentId(), friendIds);
 
             FirestoreRecyclerOptions<SearchUserModel> options = new FirestoreRecyclerOptions.Builder<SearchUserModel>()
                     .setQuery(query, SearchUserModel.class)
                     .build();
 
-            // Dừng lắng nghe nếu adapter đã có
             if (adapter != null) {
                 adapter.stopListening();
             }
 
-            // Tạo adapter mới
-            adapter = new FriendRequestAdapter(options, this);
+            adapter = new FriendRequestAdapter(options, this, this);
             recycleFriendRequest.setLayoutManager(new LinearLayoutManager(this));
             recycleFriendRequest.setAdapter(adapter);
 
-            // Bắt đầu lắng nghe thay đổi
             adapter.startListening();
         }
+    }
+
+    @Override
+    public void onFriendRequestUpdated() {
+        getFriendRequestIds();
     }
 
     @Override

@@ -14,32 +14,28 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.chatapp.R;
-import com.example.chatapp.activities.ChatDetailActivity;
-import com.example.chatapp.activities.ProfileUserActivity;
+import com.example.chatapp.model.FriendModel;
 import com.example.chatapp.model.SearchUserModel;
-import com.example.chatapp.util.AndroidUtil;
 import com.example.chatapp.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.WriteBatch;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import io.github.muddz.styleabletoast.StyleableToast;
 
 public class FriendRequestAdapter extends FirestoreRecyclerAdapter<SearchUserModel, FriendRequestAdapter.FriendRequestViewHolder> {
 
     private final Context context;
+    private final OnFriendRequestUpdateListener listener;
 
-    public FriendRequestAdapter(@NonNull FirestoreRecyclerOptions<SearchUserModel> options, Context context) {
+    public interface OnFriendRequestUpdateListener {
+        void onFriendRequestUpdated();
+    }
+
+    public FriendRequestAdapter(@NonNull FirestoreRecyclerOptions<SearchUserModel> options, Context context, OnFriendRequestUpdateListener listener) {
         super(options);
         this.context = context;
+        this.listener = listener;
     }
 
     @Override
@@ -52,41 +48,41 @@ public class FriendRequestAdapter extends FirestoreRecyclerAdapter<SearchUserMod
         holder.btnAccept.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                id của người nhận
+                String otherUser = model.getUserId();
                 String currentUserUid = FirebaseUtil.currentUserUid();
-//                id của người gửi
-                String receiverUserId = model.getUserId();
                 Timestamp createAddFriend = Timestamp.now();
 
-                // Tạo yêu cầu kết bạn
-                Map<String, Object> friendRequest = new HashMap<>();
-                friendRequest.put("userId", currentUserUid);
-                friendRequest.put("createAddFriend", createAddFriend);
+                // Cập nhật trạng thái bạn bè
+                FirebaseUtil.updateStatusFriend(otherUser).update("status", "friend");
+                FirebaseUtil.updateStatusFriend(otherUser).update("create_add_friend", createAddFriend);
 
-                // Tạo yêu cầu đã gửi
-                Map<String, Object> sentFriendRequest = new HashMap<>();
-                sentFriendRequest.put("receiverId", receiverUserId);
-                sentFriendRequest.put("createAddFriend", createAddFriend);
+                // Thêm user vào friend của người gửi
+                FriendModel friendRequest = new FriendModel(currentUserUid, createAddFriend, "friend");
+                FirebaseUtil.allFriendUserCollection(otherUser).document(currentUserUid).set(friendRequest)
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                // Notify Activity to update the UI
+                                if (listener != null) {
+                                    listener.onFriendRequestUpdated();
+                                }
+                            }
+                        });
+            }
+        });
 
-                // Lấy instance của Firestore và batch
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-                WriteBatch batch = db.batch();
-
-                // Thêm yêu cầu kết bạn vào sub-collection 'friend_request' của người nhận
-                DocumentReference friendRequestRef = FirebaseUtil.allFriendUserCollection(receiverUserId).document(currentUserUid);
-                batch.set(friendRequestRef, friendRequest);
-
-                // Thêm yêu cầu đã gửi vào collection 'sentFriendRequest' của người gửi
-                DocumentReference sentRequestRef = FirebaseUtil.allFriendUserCollection(currentUserUid).document(receiverUserId);
-                batch.set(sentRequestRef, sentFriendRequest);
-
-//                Xóa khỏi danh sách chờ kết bạn
-                DocumentReference deleteRequestRef = FirebaseUtil.allFriendRequestCollection(currentUserUid).document(receiverUserId);
-                batch.delete(deleteRequestRef);
-
-
-                // Thực hiện batch
-                batch.commit();
+        holder.btnRefuse.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String otherUser = model.getUserId();
+                String currentUserUid = FirebaseUtil.currentUserUid();
+                FirebaseUtil.allFriendUserCollection(currentUserUid).document(otherUser).delete().addOnCompleteListener(task->{
+                    if (task.isSuccessful()) {
+                        // Notify Activity to update the UI
+                        if (listener != null) {
+                            listener.onFriendRequestUpdated();
+                        }
+                    }
+                });
             }
         });
     }
@@ -101,15 +97,15 @@ public class FriendRequestAdapter extends FirestoreRecyclerAdapter<SearchUserMod
     static class FriendRequestViewHolder extends RecyclerView.ViewHolder {
         ImageView imgAvatar;
         TextView txtUserName;
-        Button btnRefuse,btnAccept;
+        Button btnRefuse, btnAccept;
 
         FriendRequestViewHolder(@NonNull View itemView) {
             super(itemView);
             imgAvatar = itemView.findViewById(R.id.imgAvatar);
             txtUserName = itemView.findViewById(R.id.txtUserName);
-            btnAccept=itemView.findViewById(R.id.btnAccept);
-            btnRefuse=itemView.findViewById(R.id.btnRefuse);
-
+            btnAccept = itemView.findViewById(R.id.btnAccept);
+            btnRefuse = itemView.findViewById(R.id.btnRefuse);
         }
     }
 }
+

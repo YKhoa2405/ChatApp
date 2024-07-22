@@ -31,16 +31,11 @@ public class FirebaseUtil {
     public static  CollectionReference allFriendUserCollection(String userId){
         return FirebaseFirestore.getInstance().collection("users").document(userId).collection("friends");
     }
-//    Lấy ra danh sách yêu cầu kết bạn friendRequest
-    public static  CollectionReference allFriendRequestCollection(String userId){
-        return FirebaseFirestore.getInstance().collection("users").document(userId).collection("friendRequest");
+
+    public static  DocumentReference updateStatusFriend(String userId){
+        return FirebaseFirestore.getInstance().collection("users").document(FirebaseUtil.currentUserUid()).collection("friends").document(userId);
     }
 
-
-    // Thêm id của người nhận vào sub friendRequest của người gửi, để biết mình đã gửi yêu cầu cho những ai
-    public static CollectionReference addUserToSendFriendRequest(){
-        return FirebaseFirestore.getInstance().collection("users").document(FirebaseUtil.currentUserUid()).collection("sentFriendRequest");
-    }
 
 //    Lấy phòng chat
     public static  DocumentReference getChatRooms(String chatRoomId){

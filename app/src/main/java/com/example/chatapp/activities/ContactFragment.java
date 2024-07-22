@@ -81,21 +81,22 @@ public class ContactFragment extends Fragment {
     }
 
     void getFriendIds() {
-        FirebaseUtil.allFriendUserCollection(FirebaseUtil.currentUserUid()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        FirebaseUtil.allFriendUserCollection(FirebaseUtil.currentUserUid()).whereEqualTo("status","friend").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
                     friendIds.clear();
                     for (QueryDocumentSnapshot document : task.getResult()) {
                         FriendModel friendModel = document.toObject(FriendModel.class);
-                        friendIds.add(friendModel.getUserId());
+                        if (friendModel.getUserId() != null) {
+                            friendIds.add(friendModel.getUserId());
+                        }
                     }
                     setupRecycleListFriend(friendIds);
                 } else {
                     // Xử lý trường hợp truy vấn thất bại
                     recyclerListFriend.setVisibility(View.GONE);
                     emptyTextView.setVisibility(View.VISIBLE);
-                    emptyTextView.setText("Có lỗi xảy ra, vui lòng thử lại.");
                 }
             }
         });
