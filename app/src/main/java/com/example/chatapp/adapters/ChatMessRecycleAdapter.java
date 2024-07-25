@@ -1,11 +1,9 @@
 package com.example.chatapp.adapters;
 
 import android.content.Context;
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -16,24 +14,28 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.chatapp.R;
 import com.example.chatapp.model.ChatMessageModel;
-import com.example.chatapp.model.SearchUserModel;
+import com.example.chatapp.util.AESUtil;
 import com.example.chatapp.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.Timestamp;
 
+import java.security.PrivateKey;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 import java.util.Calendar;
+
+import javax.crypto.SecretKey;
 
 public class ChatMessRecycleAdapter extends FirestoreRecyclerAdapter<ChatMessageModel,ChatMessRecycleAdapter.ChatMessageViewHolder> {
 
     Context context;
-    public ChatMessRecycleAdapter(@NonNull FirestoreRecyclerOptions<ChatMessageModel> options, Context context) {
+    private final PrivateKey privateKey;
+    public ChatMessRecycleAdapter(@NonNull FirestoreRecyclerOptions<ChatMessageModel> options, Context context, PrivateKey privateKey) {
         super(options);
         this.context = context;
+        this.privateKey = privateKey;
     }
 
 
@@ -45,16 +47,26 @@ public class ChatMessRecycleAdapter extends FirestoreRecyclerAdapter<ChatMessage
                 // Tin nhắn từ người dùng hiện tại
                 holder.leftChatLayout.setVisibility(View.GONE);
                 holder.rightChatLayout.setVisibility(View.VISIBLE);
-                holder.rightChatTxt.setText(model.getMessage());
-                holder.txtTimeChat.setVisibility(View.VISIBLE);
-                holder.txtTimeLeftChatDetail.setVisibility(View.GONE);
-                holder.txtTimeChat.setText(getFormattedDateTime(model.getTimestamp()));
+                try {
+                    SecretKey key = AESUtil.base64ToKey(model.getSecretKey());
+                    String decryptedMessage = AESUtil.decrypt(model.getMessage(), key);
+                    holder.rightChatTxt.setText(decryptedMessage);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                holder.txtTimeRightChatDetail.setVisibility(View.VISIBLE);
+                holder.txtTimeRightChatDetail.setText(getFormattedDateTime(model.getTimestamp()));
             } else {
                 // Tin nhắn từ người gửi khác
                 holder.rightChatLayout.setVisibility(View.GONE);
                 holder.leftChatLayout.setVisibility(View.VISIBLE);
-                holder.leftChatTxt.setText(model.getMessage());
-                holder.txtTimeChat.setVisibility(View.GONE);
+                try {
+                    SecretKey key = AESUtil.base64ToKey(model.getSecretKey());
+                    String decryptedMessage = AESUtil.decrypt(model.getMessage(), key);
+                    holder.leftChatTxt.setText(decryptedMessage);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 holder.txtTimeLeftChatDetail.setVisibility(View.VISIBLE);
                 holder.txtTimeLeftChatDetail.setText(getFormattedDateTime(model.getTimestamp()));
             }
@@ -93,7 +105,7 @@ public class ChatMessRecycleAdapter extends FirestoreRecyclerAdapter<ChatMessage
             return format.format(date);
         } else {
             // Nếu khác ngày thì hiển thị ngày tháng năm và giờ phút
-            SimpleDateFormat format = new SimpleDateFormat("MMM dd, 'at' hh:mm a", Locale.getDefault());
+            SimpleDateFormat format = new SimpleDateFormat("MMM dd, hh:mm a", Locale.getDefault());
             return format.format(date);
         }
     }
@@ -111,7 +123,7 @@ public class ChatMessRecycleAdapter extends FirestoreRecyclerAdapter<ChatMessage
 
     static class ChatMessageViewHolder extends RecyclerView.ViewHolder {
         LinearLayout leftChatLayout,rightChatLayout;
-        TextView leftChatTxt,rightChatTxt,txtTimeChat,txtTimeLeftChatDetail,txtTimeRightChatDetail;
+        TextView leftChatTxt,rightChatTxt,txtTimeLeftChatDetail,txtTimeRightChatDetail;
         ImageView rightChatImage,leftChatImage;
 
         ChatMessageViewHolder(@NonNull View itemView) {
@@ -122,7 +134,6 @@ public class ChatMessRecycleAdapter extends FirestoreRecyclerAdapter<ChatMessage
             rightChatTxt = itemView.findViewById(R.id.rightChatTxt);
             leftChatImage = itemView.findViewById(R.id.leftChatImage);
             rightChatImage = itemView.findViewById(R.id.rightChatImage);
-            txtTimeChat = itemView.findViewById(R.id.txtTimeChat);
             txtTimeLeftChatDetail = itemView.findViewById(R.id.txtTimeLeftChatDetail);
             txtTimeRightChatDetail = itemView.findViewById(R.id.txtTimeRightChatDetail);
 

@@ -35,9 +35,14 @@ public class FirebaseUtil {
     public static  DocumentReference updateStatusFriend(String userId){
         return FirebaseFirestore.getInstance().collection("users").document(FirebaseUtil.currentUserUid()).collection("friends").document(userId);
     }
+//    Lưu lại lịch sử tìm kiếm
+public static CollectionReference getSearchHistoryCollection(String userId) {
+    return FirebaseFirestore.getInstance().collection("users").document(userId).collection("searchHistory");
+}
 
 
-//    Lấy phòng chat
+
+    //    Lấy phòng chat
     public static  DocumentReference getChatRooms(String chatRoomId){
         return FirebaseFirestore.getInstance().collection("chatRooms").document(chatRoomId);
     }
@@ -103,5 +108,6 @@ public class FirebaseUtil {
     public static Task<Void> UpdateSeenByMessage(String chatRoomId,String userId){
         return FirebaseFirestore.getInstance().collection("chatRooms").document(chatRoomId).collection("chats").document(userId).update("seenBy",true);
     }
+
 
 }

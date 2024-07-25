@@ -158,10 +158,7 @@ public class LoginActivity extends AppCompatActivity {
                         startActivity(new Intent(LoginActivity.this,MainActivity.class));
 
                     } else {
-                        // If sign in fails, display a message to the user.
                         StyleableToast.makeText(LoginActivity.this, "Đăng nhập thất bại", R.style.errorToast).show();
-
-
                     }
                 });
     }

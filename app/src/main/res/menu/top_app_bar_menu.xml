@@ -2,10 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/menu_avatar"
-        android:title="Avatar"
-        android:icon="@drawable/facebook"
+        android:id="@+id/btnDots"
+        android:title="Dots"
+        android:icon="@drawable/ic_dots"
         app:showAsAction="always" />
-
-
 </menu>
