@@ -9,6 +9,7 @@ public class SearchUserModel {
     private String email;
     private String status; // Thêm trường trạng thái
     private String bio;
+    private String token;
 
     public SearchUserModel(String user_name, String avatar, String email, String userId, String status,String bio) {
         this.user_name = user_name;
@@ -71,5 +72,13 @@ public class SearchUserModel {
 
     public void setBio(String bio) {
         this.bio = bio;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

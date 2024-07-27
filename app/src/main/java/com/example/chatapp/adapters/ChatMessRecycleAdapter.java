@@ -31,11 +31,9 @@ import javax.crypto.SecretKey;
 public class ChatMessRecycleAdapter extends FirestoreRecyclerAdapter<ChatMessageModel,ChatMessRecycleAdapter.ChatMessageViewHolder> {
 
     Context context;
-    private final PrivateKey privateKey;
-    public ChatMessRecycleAdapter(@NonNull FirestoreRecyclerOptions<ChatMessageModel> options, Context context, PrivateKey privateKey) {
+    public ChatMessRecycleAdapter(@NonNull FirestoreRecyclerOptions<ChatMessageModel> options, Context context) {
         super(options);
         this.context = context;
-        this.privateKey = privateKey;
     }
 
 
@@ -85,6 +83,9 @@ public class ChatMessRecycleAdapter extends FirestoreRecyclerAdapter<ChatMessage
                 holder.leftChatImage.setVisibility(View.VISIBLE);
                 Glide.with(context).load(model.getMessage()).into(holder.leftChatImage);
             }
+        }
+        if(holder.leftChatTxt==null && holder.rightChatTxt==null &&holder.rightChatImage==null&& holder.leftChatImage==null){
+
         }
     }
 

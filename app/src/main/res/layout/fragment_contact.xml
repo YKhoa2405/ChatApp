@@ -66,16 +66,15 @@
             android:queryHint="Tìm kiếm bạn bè"/>
 
         <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
+            android:id="@+id/txtCountFriend"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:textColor="@color/black"
-            android:textStyle="bold"
             android:paddingStart="20dp"
             android:paddingTop="10dp"
             android:paddingBottom="10dp"
-            android:text="Bạn bè của tôi"
+            android:textColor="@color/black"
+            android:textSize="16sp"
+            android:textStyle="bold"
             tools:ignore="RtlSymmetry" />
 
         <TextView

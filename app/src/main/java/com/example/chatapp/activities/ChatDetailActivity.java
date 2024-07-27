@@ -7,9 +7,11 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -17,6 +19,8 @@ import android.widget.LinearLayout;
 import androidx.appcompat.widget.SearchView;
 
 import android.widget.TextView;
+import android.widget.Toast;
+
 import androidx.appcompat.widget.Toolbar;
 
 import androidx.activity.EdgeToEdge;
@@ -48,9 +52,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.security.KeyPair;
-import java.security.PrivateKey;
-import java.security.PublicKey;
 import java.util.Arrays;
 
 
@@ -61,19 +62,17 @@ import io.github.muddz.styleabletoast.StyleableToast;
 public class ChatDetailActivity extends AppCompatActivity {
 
     SearchView searchChat;
-    LinearLayout layoutTopBar;
+    LinearLayout layoutTopBar,layoutInfo;
     Toolbar topBar;
     String chatRoomId;
     SearchUserModel otherUser;
-    ImageView imgAvatar;
-    TextView txtUserName;
+    ImageView imgAvatar,imgAvatarChat,imgSearchText;
+    TextView txtUserName,txtUserNameChat;
     ImageButton btnSend, btnSendImage;
     EditText edtMessage;
     RecyclerView chatRecycle;
     ChatRoomModel chatRoomModel;
     ChatMessRecycleAdapter adapter;
-    private PublicKey publicKey;
-    private PrivateKey privateKey;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,17 +84,22 @@ public class ChatDetailActivity extends AppCompatActivity {
         chatRoomId = FirebaseUtil.getChatRoomId(FirebaseUtil.currentUserUid(), otherUser.getUserId());
 
         imgAvatar = findViewById(R.id.imgAvatar);
+        imgAvatarChat = findViewById(R.id.imgAvatarChat);
+        imgSearchText=findViewById(R.id.imgSearchText);
         txtUserName = findViewById(R.id.txtUserName);
+        txtUserNameChat = findViewById(R.id.txtUserNameChat);
         btnSendImage = findViewById(R.id.btnSendImage);
         edtMessage = findViewById(R.id.edtMessage);
         btnSend = findViewById(R.id.btnSend);
         chatRecycle = findViewById(R.id.chatRecycle);
-        searchChat = findViewById(R.id.searchChat);
         layoutTopBar = findViewById(R.id.layoutTopBar);
+        layoutInfo = findViewById(R.id.layoutInfo);
         topBar = findViewById(R.id.topBar);
 
         txtUserName.setText(otherUser.getUser_name());
+        txtUserNameChat.setText(otherUser.getUser_name());
         Glide.with(this).load(otherUser.getAvatar()).into(imgAvatar);
+        Glide.with(this).load(otherUser.getAvatar()).into(imgAvatarChat);
 
         getCreateChatRoomModel();
         setUpChatMessageRecycle();
@@ -134,33 +138,18 @@ public class ChatDetailActivity extends AppCompatActivity {
                 }
             }
         });
+
+        imgSearchText.setOnClickListener(task->{
+            Intent intent = new Intent(this, SearchChatActivity.class);
+            AndroidUtil.passUserModelAsIntent(intent,otherUser);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        });
+
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.option_menu_chat_detail, menu);
-        return true;
-    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.item1) {
-            // Xử lý khi nhấp vào "Tìm kiếm tin nhắn"
-            StyleableToast.makeText(ChatDetailActivity.this, "block thất bại", R.style.errorToast).show();
-
-            return true;
-        } else if (id == R.id.item2) {
-            // Xử lý khi nhấp vào "Chặn người dùng"
-            StyleableToast.makeText(ChatDetailActivity.this, "block thất bại", R.style.errorToast).show();
-
-            return true;
-        } else {
-            return super.onOptionsItemSelected(item);
-        }
-    }
-
-    void sendMessageUser(String message, int methodMess,String key) {
+    void sendMessageUser(String message, int methodMess, String key) {
 
         chatRoomModel.setLassMessageTimestamp(Timestamp.now());
         chatRoomModel.setLastMessageSenderId(FirebaseUtil.currentUserUid());
@@ -198,20 +187,44 @@ public class ChatDetailActivity extends AppCompatActivity {
                 .setQuery(query, ChatMessageModel.class)
                 .build();
 
-        adapter = new ChatMessRecycleAdapter(options, this,privateKey);
+        adapter = new ChatMessRecycleAdapter(options,getApplicationContext());
         LinearLayoutManager manager = new LinearLayoutManager(this);
         manager.setReverseLayout(true);
         chatRecycle.setLayoutManager(manager);
         chatRecycle.setAdapter(adapter);
+
         adapter.startListening();
         adapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onItemRangeInserted(int positionStart, int itemCount) {
                 super.onItemRangeInserted(positionStart, itemCount);
                 chatRecycle.smoothScrollToPosition(0);
+                updateEmptyView();
+            }
+
+            private void updateEmptyView() {
+                if (adapter.getItemCount() == 0) {
+                    layoutInfo.setVisibility(View.VISIBLE);
+                    chatRecycle.setVisibility(View.GONE);
+                }else {
+                    layoutInfo.setVisibility(View.GONE);
+                    chatRecycle.setVisibility(View.VISIBLE);
+                }
+            }
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+                updateEmptyView();
+            }
+
+            @Override
+            public void onChanged() {
+                super.onChanged();
+                updateEmptyView();
             }
         });
     }
+
 
     void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);

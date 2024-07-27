@@ -1,7 +1,6 @@
 package com.example.chatapp.util;
 
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.Timestamp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
@@ -23,6 +22,10 @@ public class FirebaseUtil {
         return FirebaseFirestore.getInstance().collection("users").document(currentUserUid());
     }
 
+    public static DocumentReference otherUserDetail(String userId){
+        return FirebaseFirestore.getInstance().collection("users").document(userId);
+    }
+
     public static CollectionReference allUserCollection(){
         return  FirebaseFirestore.getInstance().collection("users");
     }
@@ -35,11 +38,10 @@ public class FirebaseUtil {
     public static  DocumentReference updateStatusFriend(String userId){
         return FirebaseFirestore.getInstance().collection("users").document(FirebaseUtil.currentUserUid()).collection("friends").document(userId);
     }
-//    Lưu lại lịch sử tìm kiếm
-public static CollectionReference getSearchHistoryCollection(String userId) {
-    return FirebaseFirestore.getInstance().collection("users").document(userId).collection("searchHistory");
-}
-
+    //    Lưu lại lịch sử tìm kiếm
+    public static CollectionReference getSearchHistoryCollection(String userId) {
+        return FirebaseFirestore.getInstance().collection("users").document(userId).collection("searchHistory");
+    }
 
 
     //    Lấy phòng chat
@@ -78,7 +80,8 @@ public static CollectionReference getSearchHistoryCollection(String userId) {
     }
 
     public static String timestampToStringFormat(Timestamp timestamp){
-        return new SimpleDateFormat("HH:mm").format(timestamp.toDate());
+        String format = new SimpleDateFormat("HH:mm").format(timestamp.toDate());
+        return format;
     }
 
 //    Tải hình ảnh lên Storage
@@ -101,12 +104,16 @@ public static CollectionReference getSearchHistoryCollection(String userId) {
         FirebaseAuth.getInstance().signOut();
     }
 
-    public static Task<Void> UpdateStatusUser(String userId, String status){
-        return FirebaseFirestore.getInstance().collection("users").document(userId).update("status",status);
+    public static void UpdateStatusUser(String userId, String status){
+        FirebaseFirestore.getInstance().collection("users").document(userId).update("status", status);
     }
 
-    public static Task<Void> UpdateSeenByMessage(String chatRoomId,String userId){
-        return FirebaseFirestore.getInstance().collection("chatRooms").document(chatRoomId).collection("chats").document(userId).update("seenBy",true);
+    public static void UpdateSeenByMessage(String chatRoomId, String userId){
+        FirebaseFirestore.getInstance().collection("chatRooms").document(chatRoomId).collection("chats").document(userId).update("seenBy", true);
+    }
+
+    public static CollectionReference getChatTwoUser(String userId1,String userId2){
+        return FirebaseFirestore.getInstance().collection("chatRooms").document(getChatRoomId(userId1,userId2)).collection("chats");
     }
 
 
