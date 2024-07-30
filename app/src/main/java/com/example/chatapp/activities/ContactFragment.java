@@ -94,10 +94,13 @@ public class ContactFragment extends Fragment {
                         }
                     }
                     setupRecycleListFriend(friendIds);
+                    updateFriendCount(friendIds.size());
                 } else {
                     // Xử lý trường hợp truy vấn thất bại
                     recyclerListFriend.setVisibility(View.GONE);
                     emptyTextView.setVisibility(View.VISIBLE);
+                    updateFriendCount(0);
+
                 }
             }
         });
@@ -133,8 +136,10 @@ public class ContactFragment extends Fragment {
         // Start listening for changes
         adapter.startListening();
 
-        int countFriend = adapter.getItemCount();
-        txtCountFriend.setText(countFriend + " bạn bè");
+    }
+
+    private void updateFriendCount(int count) {
+        txtCountFriend.setText(count + " bạn bè");
     }
 
     void searchFriends(String searchText) {

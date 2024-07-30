@@ -38,6 +38,10 @@ public class FirebaseUtil {
     public static  DocumentReference updateStatusFriend(String userId){
         return FirebaseFirestore.getInstance().collection("users").document(FirebaseUtil.currentUserUid()).collection("friends").document(userId);
     }
+//    hủy kết bạn
+    public static DocumentReference deleteFriend(String userId1, String userId2){
+        return FirebaseFirestore.getInstance().collection("users").document(userId1).collection("friends").document(userId2);
+    }
     //    Lưu lại lịch sử tìm kiếm
     public static CollectionReference getSearchHistoryCollection(String userId) {
         return FirebaseFirestore.getInstance().collection("users").document(userId).collection("searchHistory");

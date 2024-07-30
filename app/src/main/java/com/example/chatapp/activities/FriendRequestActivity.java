@@ -65,8 +65,11 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
                                     friendIds.add(friendId);
                                 }
                                 setupRecycleFriendRequest(friendIds);
+                                updateFriendCount(friendIds.size());
+
                             } else {
                                 setupRecycleFriendRequest(new ArrayList<>());
+                                updateFriendCount(0);
                             }
                         }
                     }
@@ -104,6 +107,10 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
     @Override
     public void onFriendRequestUpdated() {
         getFriendRequestIds();
+    }
+
+    private void updateFriendCount(int count) {
+        txtCountFriendRequest.setText("Lời mời kết bạn: "+ count);
     }
 
     @Override

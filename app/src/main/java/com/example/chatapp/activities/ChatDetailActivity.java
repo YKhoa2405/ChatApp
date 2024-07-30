@@ -106,6 +106,13 @@ public class ChatDetailActivity extends AppCompatActivity {
 
         topBar.setNavigationOnClickListener(task->{finish();});
 
+        imgAvatar.setOnClickListener(task->{
+            Intent intent = new Intent(this, ProfileUserActivity.class);
+            AndroidUtil.passUserModelAsIntent(intent,otherUser);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        });
+
         edtMessage.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}

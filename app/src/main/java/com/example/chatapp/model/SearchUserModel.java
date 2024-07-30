@@ -10,14 +10,16 @@ public class SearchUserModel {
     private String status; // Thêm trường trạng thái
     private String bio;
     private String token;
+    private String birthDay;
 
-    public SearchUserModel(String user_name, String avatar, String email, String userId, String status,String bio) {
+    public SearchUserModel(String user_name, String avatar, String email, String userId, String status,String bio,String birthDay) {
         this.user_name = user_name;
         this.avatar = avatar;
         this.email = email;
         this.userId = userId;
         this.status = status; // Khởi tạo trạng thái
         this.bio = bio;
+        this.birthDay=birthDay;
     }
 
     public SearchUserModel() {
@@ -80,5 +82,13 @@ public class SearchUserModel {
 
     public void setToken(String token) {
         this.token = token;
+    }
+
+    public String getBirthDay() {
+        return birthDay;
+    }
+
+    public void setBirthDay(String birthDay) {
+        this.birthDay = birthDay;
     }
 }

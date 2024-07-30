@@ -92,12 +92,30 @@
         android:orientation="horizontal">
 
         <androidx.cardview.widget.CardView
+            android:id="@+id/btnDeleteFriend"
+            android:layout_width="44dp"
+            app:cardCornerRadius="24dp"
+            android:backgroundTint="@color/buttonColor"
+            android:layout_gravity="center"
+            android:layout_height="44dp"
+            android:layout_marginRight="10dp"
+            android:visibility="gone">
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                app:srcCompat="@drawable/ic_friend_check"
+                android:layout_gravity="center"/>
+        </androidx.cardview.widget.CardView>
+
+        <androidx.cardview.widget.CardView
             android:id="@+id/btnChat"
             android:layout_width="44dp"
             app:cardCornerRadius="24dp"
             android:backgroundTint="@color/buttonColor"
             android:layout_gravity="center"
             android:layout_height="44dp"
+            android:layout_marginLeft="10dp"
             android:visibility="gone">
 
             <ImageView
@@ -119,6 +137,7 @@
         android:paddingHorizontal="20dp"
         android:paddingTop="20dp">
 
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -136,21 +155,6 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="Thời gian tham gia "
-            android:textColor="@color/buttonColor"
-            android:textSize="14sp" />
-
-        <TextView
-            android:id="@+id/txtTimeJoin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:textSize="18sp"
-            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
