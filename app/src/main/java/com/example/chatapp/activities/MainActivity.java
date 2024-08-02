@@ -2,6 +2,7 @@ package com.example.chatapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.ScaleAnimation;
@@ -13,6 +14,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.chatapp.R;
 import com.example.chatapp.databinding.ActivityMainBinding;
+import com.example.chatapp.util.FirebaseUtil;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -25,6 +28,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        getFCMToken();
 
         if (savedInstanceState == null) {
             getSupportFragmentManager()
@@ -136,6 +141,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    void getFCMToken(){
+        FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task->{
+            if(task.isSuccessful()){
+                String token  = task.getResult();
+                Log.i("My token",token);
+                FirebaseUtil.currentUserDetail().update("fcmToken",token);
+            }
+        });
+    }
 
 
 }

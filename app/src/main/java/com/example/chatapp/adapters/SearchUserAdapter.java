@@ -55,6 +55,15 @@ public class SearchUserAdapter extends FirestoreRecyclerAdapter<SearchUserModel,
                 AndroidUtil.passUserModelAsIntent(intent,model);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 context.startActivity(intent);
+
+                FirebaseUtil.getSearchHistoryCollection(FirebaseUtil.currentUserUid())
+                        .whereEqualTo("userId", model.getUserId())
+                        .get()
+                        .addOnCompleteListener(task -> {
+                            if (task.isSuccessful() && task.getResult() != null && task.getResult().isEmpty()) {
+                                FirebaseUtil.getSearchHistoryCollection(FirebaseUtil.currentUserUid()).add(model);
+                            }
+                        });
             }
         });
     }

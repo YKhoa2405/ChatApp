@@ -102,12 +102,12 @@
             android:text="Ngày sinh của bạn" />
 
         <EditText
-            android:id="@+id/editTextText2"
+            android:id="@+id/edtDateBirthday"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:inputType="text"
-            android:text="Name" />
+            android:hint="Chọn ngày sinh của bạn"
+            android:focusable="false"
+            android:clickable="true" />
 
     </LinearLayout>
 

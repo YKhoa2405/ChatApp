@@ -48,7 +48,11 @@ dependencies {
     implementation(libs.firebase.auth)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.storage)
+<<<<<<< HEAD
     implementation(libs.firebase.database)
+=======
+    implementation(libs.firebase.messaging)
+>>>>>>> 1412c5668f9726731f94f7c5135f8426c2c1f73b
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

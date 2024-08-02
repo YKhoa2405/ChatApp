@@ -55,6 +55,12 @@ public class ListFriendAdapter extends FirestoreRecyclerAdapter<SearchUserModel,
         });
     }
 
+    @Override
+    public int getItemCount() {
+        return super.getItemCount();
+    }
+
+
     @NonNull
     @Override
     public ListFriendViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

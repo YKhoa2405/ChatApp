@@ -2,9 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.SearchUserActivity">
+    android:fitsSystemWindows="true"
+    tools:context=".activities.SearchChatActivity">
 
     <LinearLayout
         android:id="@+id/topBar"
@@ -24,9 +26,9 @@
             android:src="@drawable/baseline_arrow_back_24" />
 
         <SearchView
-            android:id="@+id/searchView"
+            android:id="@+id/searchChat"
             android:layout_width="match_parent"
-            android:queryHint="Tìm kiếm ..."
+            android:queryHint="Tìm kiếm trong cuộc trò chuyện ..."
             android:layout_height="wrap_content"
             android:layout_marginEnd="20dp"
             android:iconifiedByDefault="false"
@@ -34,40 +36,51 @@
 
     </LinearLayout>
 
-
-    <LinearLayout
-        android:id="@+id/layout1"
-        android:layout_below="@id/topBar"
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/txtEqual"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="15dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            android:text="Tìm kiếm gần đây" />
-
-        <TextView
-            android:id="@+id/txtDeleteHistory"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textStyle="italic"
-            android:textSize="16sp"
-            android:textColor="@color/red"
-            android:clickable="true"
-            android:onClick="handleClick"
-            android:text="Xóa tất cả" />
-    </LinearLayout>
+        android:layout_below="@id/topBar"
+        android:textSize="16sp"
+        android:textColor="@color/buttonColor"
+        android:textStyle="bold"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="10dp"
+        android:text="" />
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycleSearchResult"
+        android:id="@+id/recycleSearchChat"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/layout1"/>
+        android:layout_below="@id/txtEqual"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/layoutSearchNull"
+        android:layout_below="@id/topBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_marginHorizontal="40dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_marginBottom="5dp"
+            android:text="@string/search_chat_null_title" />
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:text="@string/search_chat_null" />
+    </LinearLayout>
 
 </RelativeLayout>

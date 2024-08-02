@@ -7,5 +7,9 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
+    <string name="search_chat_null">Hãy thử lại với cách viết hoặc kết hợp cụm từ khác. Từ hoàn chỉnh thường là lựa chọn hiệu quả nhất</string>
+    <string name="search_chat_null_title">Không tìm thất kết quả nào</string>
+
+
 
 </resources>

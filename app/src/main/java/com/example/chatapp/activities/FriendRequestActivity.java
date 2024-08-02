@@ -31,7 +31,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
 
     private RecyclerView recycleFriendRequest;
     private FriendRequestAdapter adapter;
-    private TextView emptyTextView;
+    private TextView emptyTextView,txtCountFriendRequest;
     private ImageButton btnGoBack;
 
     @Override
@@ -43,7 +43,7 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
         recycleFriendRequest = findViewById(R.id.recycleFriendRequest);
         emptyTextView = findViewById(R.id.emptyTextView);
         btnGoBack = findViewById(R.id.btnGoBack);
-
+        txtCountFriendRequest = findViewById(R.id.txtCountFriendRequest);
         btnGoBack.setOnClickListener(v -> finish());
 
         getFriendRequestIds();
@@ -65,8 +65,11 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
                                     friendIds.add(friendId);
                                 }
                                 setupRecycleFriendRequest(friendIds);
+                                updateFriendCount(friendIds.size());
+
                             } else {
                                 setupRecycleFriendRequest(new ArrayList<>());
+                                updateFriendCount(0);
                             }
                         }
                     }
@@ -89,6 +92,8 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
 
             if (adapter != null) {
                 adapter.stopListening();
+                int countFriend = adapter.getItemCount();
+                txtCountFriendRequest.setText(countFriend);
             }
 
             adapter = new FriendRequestAdapter(options, this, this);
@@ -102,6 +107,10 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
     @Override
     public void onFriendRequestUpdated() {
         getFriendRequestIds();
+    }
+
+    private void updateFriendCount(int count) {
+        txtCountFriendRequest.setText("Lời mời kết bạn: "+ count);
     }
 
     @Override

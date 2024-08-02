@@ -16,10 +16,13 @@ import com.example.chatapp.R;
 import com.example.chatapp.activities.ChatDetailActivity;
 import com.example.chatapp.model.ChatRoomModel;
 import com.example.chatapp.model.SearchUserModel;
+import com.example.chatapp.util.AESUtil;
 import com.example.chatapp.util.AndroidUtil;
 import com.example.chatapp.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+
+import javax.crypto.SecretKey;
 
 public class ChatRecentAdapter extends FirestoreRecyclerAdapter<ChatRoomModel, ChatRecentAdapter.ChatRecentViewHolder> {
 
@@ -36,20 +39,26 @@ public class ChatRecentAdapter extends FirestoreRecyclerAdapter<ChatRoomModel, C
             if(task.isSuccessful()){
                 boolean lassMessSentByMe = model.getLastMessageSenderId().equals(FirebaseUtil.currentUserUid());
                 int max_length = 40;
+
                 String messageText = model.getLassMessageText();
+                SecretKey key = AESUtil.base64ToKey(model.getKey());
+                try {
+                    String decryptedMessage = AESUtil.decrypt(messageText, key);
+                    if (decryptedMessage.length() > max_length) {
+                        decryptedMessage = decryptedMessage.substring(0, max_length) + " ...";
+                    }
+
+                    if (lassMessSentByMe) {
+                        holder.txtLastChat.setText(String.format("Bạn: %s", decryptedMessage));
+                    }
+                    else{
+                        holder.txtLastChat.setText(String.format(decryptedMessage));
+                    }
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
 
                 SearchUserModel searchUserModel=task.getResult().toObject(SearchUserModel.class);
-
-                if (messageText!=null && messageText.length() > max_length) {
-                    messageText = messageText.substring(0, max_length) + " ...";
-                }
-
-                if (lassMessSentByMe) {
-                    holder.txtLastChat.setText(String.format("Bạn: %s", messageText));
-                }
-                else{
-                    holder.txtLastChat.setText(String.format(messageText));
-                }
 
                 assert searchUserModel != null;
                 holder.txtName.setText(searchUserModel.getUser_name());

@@ -1,11 +1,11 @@
 package com.example.chatapp.activities;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -26,16 +26,21 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 import io.github.muddz.styleabletoast.StyleableToast;
 
 public class EditProfileActivity extends AppCompatActivity {
 
     ImageButton btnGoBack;
     ImageView imgEditAvatar;
-    EditText edtEditUserName, edtEditBio;
+    EditText edtEditUserName, edtEditBio,edtDateBirthday;
     Button btnSaveEdit;
     SearchUserModel currentUserModel;
     Uri imageUri; // This will hold the selected image URI
+    Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,7 @@ public class EditProfileActivity extends AppCompatActivity {
         imgEditAvatar = findViewById(R.id.imgEditAvatar);
         edtEditBio = findViewById(R.id.edtEditBio);
         edtEditUserName = findViewById(R.id.edtEditUserName);
+        edtDateBirthday = findViewById(R.id.edtDateBirthday);
 
         currentUserModel = AndroidUtil.getUserModelAsIntent(getIntent());
         edtEditUserName.setText(currentUserModel.getUser_name());
@@ -54,14 +60,24 @@ public class EditProfileActivity extends AppCompatActivity {
                 .load(currentUserModel.getAvatar())
                 .into(imgEditAvatar);
         edtEditBio.setText(currentUserModel.getBio());
+        edtDateBirthday.setText(currentUserModel.getBirthDay());
 
         btnGoBack.setOnClickListener(c -> finish());
 
         imgEditAvatar.setOnClickListener(c -> openGallery());
 
+        calendar = Calendar.getInstance();
+        edtDateBirthday.setOnClickListener(v -> {
+            new DatePickerDialog(EditProfileActivity.this, dateSetListener,
+                    calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH)).show();
+        });
+
+
         btnSaveEdit.setOnClickListener(view -> {
             String newUserName = edtEditUserName.getText().toString().trim();
             String newBio = edtEditBio.getText().toString();
+            String birthDay = edtDateBirthday.getText().toString();
             if (newUserName.isEmpty()) {
                 StyleableToast.makeText(EditProfileActivity.this, "Vui lòng không để trống", R.style.errorToast).show();
                 return;
@@ -73,6 +89,7 @@ public class EditProfileActivity extends AppCompatActivity {
             currentUserModel.setUser_name(newUserName);
             currentUserModel.setBio(newBio);
             currentUserModel.setStatus("online");
+            currentUserModel.setBirthDay(birthDay);
             if (imageUri != null) {
                 // User selected a new image, upload it and then update Firestore
                 uploadImageStorage(imageUri);
@@ -82,6 +99,21 @@ public class EditProfileActivity extends AppCompatActivity {
             }
         });
     }
+
+    private final DatePickerDialog.OnDateSetListener dateSetListener =
+            (view, year, month, dayOfMonth) -> {
+                calendar.set(Calendar.YEAR, year);
+                calendar.set(Calendar.MONTH, month);
+                calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel();
+            };
+
+    private void updateLabel() {
+        String myFormat = "dd/MM/yyyy"; // Định dạng bạn muốn cho ngày
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, new Locale("vi", "VN"));
+        edtDateBirthday.setText(sdf.format(calendar.getTime())); // Cập nhật EditText với ngày đã chọn
+    }
+
 
     // Open gallery to pick an image
     void openGallery() {

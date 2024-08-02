@@ -39,7 +39,7 @@ public class ContactFragment extends Fragment {
     SearchView btnSearchFriend;
     RecyclerView recyclerListFriend;
     ListFriendAdapter adapter;
-    TextView emptyTextView;
+    TextView emptyTextView,txtCountFriend;
     List<String> friendIds = new ArrayList<>();
 
     public ContactFragment() {
@@ -54,6 +54,7 @@ public class ContactFragment extends Fragment {
         btnSearchFriend = view.findViewById(R.id.btnSearchFriend);
         recyclerListFriend = view.findViewById(R.id.recycleListFriend);
         emptyTextView = view.findViewById(R.id.emptyTextView);
+        txtCountFriend = view.findViewById(R.id.txtCountFriend);
 
         getFriendIds();
 
@@ -93,10 +94,13 @@ public class ContactFragment extends Fragment {
                         }
                     }
                     setupRecycleListFriend(friendIds);
+                    updateFriendCount(friendIds.size());
                 } else {
                     // Xử lý trường hợp truy vấn thất bại
                     recyclerListFriend.setVisibility(View.GONE);
                     emptyTextView.setVisibility(View.VISIBLE);
+                    updateFriendCount(0);
+
                 }
             }
         });
@@ -131,6 +135,11 @@ public class ContactFragment extends Fragment {
 
         // Start listening for changes
         adapter.startListening();
+
+    }
+
+    private void updateFriendCount(int count) {
+        txtCountFriend.setText(count + " bạn bè");
     }
 
     void searchFriends(String searchText) {

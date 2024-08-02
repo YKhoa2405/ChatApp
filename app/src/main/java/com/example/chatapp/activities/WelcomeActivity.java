@@ -2,6 +2,7 @@ package com.example.chatapp.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -13,6 +14,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.chatapp.R;
+import com.example.chatapp.util.FirebaseUtil;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class WelcomeActivity extends AppCompatActivity {
 
@@ -49,4 +52,5 @@ public class WelcomeActivity extends AppCompatActivity {
         Intent intent = new Intent(WelcomeActivity.this, activityClass);
         startActivity(intent);
     }
+
 }

@@ -7,19 +7,19 @@ public class ChatMessageModel {
     private String senderId;
     private Timestamp timestamp;
     private int messageMethod;
-
-
     private boolean seenBy;
+    private String secretKey;
 
     public ChatMessageModel(){};
 
 
-    public ChatMessageModel(String senderId, String message, Timestamp timestamp, int messageMethod,boolean seenBy) {
+    public ChatMessageModel(String senderId, String message, Timestamp timestamp, int messageMethod,boolean seenBy,String secretKey) {
         this.senderId = senderId;
         this.message = message;
         this.timestamp = timestamp;
         this.messageMethod=messageMethod;
         this.seenBy =seenBy;
+        this.secretKey=secretKey;
     }
 
     public String getMessage() {
@@ -62,4 +62,11 @@ public class ChatMessageModel {
         this.seenBy = seenBy;
     }
 
+    public String getSecretKey() {
+        return secretKey;
+    }
+
+    public void setSecretKey(String secretKey) {
+        this.secretKey = secretKey;
+    }
 }

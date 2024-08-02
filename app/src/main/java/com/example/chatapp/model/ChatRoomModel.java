@@ -10,15 +10,17 @@ public class ChatRoomModel {
     Timestamp lassMessageTimestamp;
     List<String> userIds;
     String lassMessageText;
+    String key;
 
     public ChatRoomModel(){}
 
 
-    public ChatRoomModel(String chatRoomId, List<String> userIds, Timestamp lassMessageTimestamp, String lastMessageSenderId) {
+    public ChatRoomModel(String chatRoomId, List<String> userIds, Timestamp lassMessageTimestamp, String lastMessageSenderId,String key) {
         this.chatRoomId = chatRoomId;
         this.userIds = userIds;
         this.lassMessageTimestamp = lassMessageTimestamp;
         this.lastMessageSenderId = lastMessageSenderId;
+        this.key = key;
     }
 
     public String getChatRoomId() {return chatRoomId;}
@@ -57,6 +59,13 @@ public class ChatRoomModel {
 
     public void setLassMessageText(String lassMessageText) {
         this.lassMessageText = lassMessageText;
+    }
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
     }
 
 
