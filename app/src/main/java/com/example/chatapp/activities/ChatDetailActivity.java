@@ -1,6 +1,7 @@
 package com.example.chatapp.activities;
 
 import android.app.Activity;
+import android.app.Application;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -51,6 +52,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.zegocloud.uikit.prebuilt.call.ZegoUIKitPrebuiltCallService;
+import com.zegocloud.uikit.prebuilt.call.invite.ZegoUIKitPrebuiltCallInvitationConfig;
 
 import java.util.Arrays;
 
@@ -66,7 +69,7 @@ public class ChatDetailActivity extends AppCompatActivity {
     Toolbar topBar;
     String chatRoomId;
     SearchUserModel otherUser;
-    ImageView imgAvatar,imgAvatarChat,imgSearchText;
+    ImageView imgAvatar,imgAvatarChat,imgSearchText,imgCallVideo;
     TextView txtUserName,txtUserNameChat;
     ImageButton btnSend, btnSendImage;
     EditText edtMessage;
@@ -86,6 +89,7 @@ public class ChatDetailActivity extends AppCompatActivity {
         imgAvatar = findViewById(R.id.imgAvatar);
         imgAvatarChat = findViewById(R.id.imgAvatarChat);
         imgSearchText=findViewById(R.id.imgSearchText);
+        imgCallVideo = findViewById(R.id.imgCallVideo);
         txtUserName = findViewById(R.id.txtUserName);
         txtUserNameChat = findViewById(R.id.txtUserNameChat);
         btnSendImage = findViewById(R.id.btnSendImage);
@@ -152,6 +156,15 @@ public class ChatDetailActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
         });
+
+//        String roomID = chatRoomModel.getChatRoomId();
+//        imgCallVideo.setOnClickListener(view -> {
+//            if (roomID != null && !roomID.isEmpty()) {
+//                startCall(roomID);
+//            } else {
+//                Toast.makeText(ChatDetailActivity.this, "Invalid room ID", Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
     }
 
@@ -266,4 +279,23 @@ public class ChatDetailActivity extends AppCompatActivity {
             }
         }).addOnFailureListener(e -> StyleableToast.makeText(ChatDetailActivity.this, "Có lỗi xảy ra", R.style.errorToast).show());
     }
+
+//    private void startCall(String roomID) {
+//        // Khởi tạo dịch vụ gọi nếu chưa làm
+//        processService(FirebaseUtil.currentUserUid());
+//    }
+//
+//    void processService(String userId){
+//        Application application = getApplication(); // Android's application context
+//        long appID =80127349;   // yourAppID
+//        String appSign ="27e13035dbf4275a8279f0be28673211f41184e16bca37c48012fd1193014798";  // yourAppSign
+//        String userID =userId; // yourUserID, userID should only contain numbers, English characters, and '_'.
+//        String userName = otherUser.getUser_name();   // yourUserName
+//
+//        ZegoUIKitPrebuiltCallInvitationConfig callInvitationConfig = new ZegoUIKitPrebuiltCallInvitationConfig();
+//
+//        ZegoUIKitPrebuiltCallService.init(getApplication(), appID, appSign, userID, userName,callInvitationConfig);
+//
+//    }
+
 }

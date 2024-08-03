@@ -8,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -21,14 +23,17 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     private ImageButton loginGoogle,btnGoBack;
     private TextView forgotPass;
     private SearchUserActivity currentUserModel;
+    private RadioGroup radioGroup;
 
 
 
@@ -61,27 +67,48 @@ public class LoginActivity extends AppCompatActivity {
         btnGoBack = findViewById(R.id.btnGoBack);
         forgotPass = findViewById(R.id.forgotPass);
         loginGoogle = findViewById(R.id.loginGoogle);
+        radioGroup = findViewById(R.id.radioGroup);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
             public void onClick(View view) {
                 String email = edtEmail.getText().toString().trim();
-                String pass = edtPass.getText().toString().trim(); // Sửa lại tên biến nếu cần
+                String pass = edtPass.getText().toString().trim();
+                RadioButton selectedRoleButton = findViewById(radioGroup.getCheckedRadioButtonId());
+                String selectedRole = selectedRoleButton.getText().toString();
 
                 if (email.isEmpty()) {
                     StyleableToast.makeText(LoginActivity.this, "Vui lòng nhập Email", R.style.errorToast).show();
-
                 } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
                     StyleableToast.makeText(LoginActivity.this, "Định dạng Email không chính xác", R.style.errorToast).show();
-
                 } else if (pass.isEmpty()) {
                     StyleableToast.makeText(LoginActivity.this, "Vui lòng nhập mật khẩu", R.style.errorToast).show();
                 } else {
                     auth.signInWithEmailAndPassword(email, pass).addOnSuccessListener(new OnSuccessListener<AuthResult>() {
                         @Override
                         public void onSuccess(AuthResult authResult) {
-                            startActivity(new Intent(LoginActivity.this,MainActivity.class));
-
+                            // Check the user's role in Firestore
+                            FirebaseUtil.currentUserDetail().get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                @Override
+                                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists()) {
+                                            String role = document.getString("role");
+                                            if (selectedRole.equals(role)) {
+                                                // Roles match, allow login
+                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                            } else {
+                                                // Roles do not match, show error message
+                                                StyleableToast.makeText(LoginActivity.this, "Bạn không có quyền truy cập", R.style.errorToast).show();
+                                            }
+                                        } else {
+                                            StyleableToast.makeText(LoginActivity.this, "Người dùng không tồn tại", R.style.errorToast).show();
+                                        }
+                                    } else {
+                                        StyleableToast.makeText(LoginActivity.this, "Lỗi khi kiểm tra vai trò người dùng", R.style.errorToast).show();
+                                    }
+                                }
+                            });
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -168,6 +195,7 @@ public class LoginActivity extends AppCompatActivity {
             String email = user.getEmail();
             String avatarUrl = user.getPhotoUrl() != null ? user.getPhotoUrl().toString() : null;
             String userName = user.getDisplayName();
+            RadioButton selectTag = findViewById(radioGroup.getCheckedRadioButtonId());
 
             Map<String, Object> userData = new HashMap<>();
             userData.put("userId", FirebaseUtil.currentUserUid());
@@ -177,7 +205,7 @@ public class LoginActivity extends AppCompatActivity {
             userData.put("user_name",userName);
             userData.put("status","online");
             userData.put("bio","null");
-
+            userData.put("role",selectTag);
 
             FirebaseUtil.currentUserDetail().set(userData);
         }

@@ -98,6 +98,7 @@ public class SignupActivity extends AppCompatActivity {
         user.put("avatar", "https://res.cloudinary.com/dsbebvfff/image/upload/v1720890023/user-profile-icon-free-vector_xcepte.jpg");
         user.put("status","online");
         user.put("bio","null");
+        user.put("role","2");
 
 
         FirebaseUtil.currentUserDetail().set(user);
