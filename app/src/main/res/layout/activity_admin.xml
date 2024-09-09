@@ -17,23 +17,25 @@
         android:gravity="center">
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/nameAdmin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:text="QUẢN LÝ USER" />
+            android:text="Quản lý tài khoản"/>
+
     </LinearLayout>
 
-    <EditText
+    <SearchView
         android:id="@+id/edtSearch"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Tìm kiếm user ..."
-        android:inputType="text"
-        android:padding="10dp"
-        android:layout_margin="10dp"/>
+        android:layout_marginTop="15dp"
+        android:layout_marginHorizontal="20dp"
+        android:background="@drawable/button_shape"
+        android:iconifiedByDefault="false"
+        android:queryHint="Tìm kiếm tài khoản"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rcvUsers"
@@ -42,14 +44,33 @@
         android:layout_weight="1"
         android:scrollbars="vertical" />
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnAddNewUser"
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Thêm user mới"
-        android:backgroundTint="@color/buttonColor"
-        android:textSize="22sp"
-        android:layout_marginHorizontal="20dp"
-        android:paddingVertical="10dp"
-        android:layout_margin="16dp"/>
+        android:gravity="end">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnAddNewUser"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:backgroundTint="@color/backgroundColor"
+            app:srcCompat="@drawable/ic_add_user"
+            android:layout_gravity="end"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"/>
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:backgroundTint="@color/red"
+            app:srcCompat="@drawable/ic_logout"
+            android:layout_gravity="end"
+            android:layout_marginBottom="20dp"
+            android:layout_marginEnd="20dp"/>
+    </LinearLayout>
+
+
 </LinearLayout>

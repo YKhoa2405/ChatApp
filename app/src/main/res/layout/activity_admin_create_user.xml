@@ -31,7 +31,7 @@
             android:textSize="20sp"
             android:textColor="@color/white"
             android:textStyle="bold"
-            android:text="Thêm user mới" />
+            android:text="Thêm mới tài khoản" />
 
 
     </LinearLayout>
@@ -42,7 +42,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="32dp"
-        android:text="User name: "
+        android:text="Tên tài khoản: "
         android:textColor="@color/black"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -121,7 +121,7 @@
         android:id="@+id/btnSave"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Lưu"
+        android:text="Thêm"
         android:backgroundTint="@color/backgroundColor"
         android:textSize="22sp"
         android:layout_marginHorizontal="20dp"

@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.chatapp.R;
+import com.example.chatapp.admin.AdminActivity;
 import com.example.chatapp.util.FirebaseUtil;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -74,7 +75,7 @@ public class LoginActivity extends AppCompatActivity {
                 String email = edtEmail.getText().toString().trim();
                 String pass = edtPass.getText().toString().trim();
                 RadioButton selectedRoleButton = findViewById(radioGroup.getCheckedRadioButtonId());
-                String selectedRole = selectedRoleButton.getText().toString();
+                String selectedRole = selectedRoleButton.getTag().toString();
 
                 if (email.isEmpty()) {
                     StyleableToast.makeText(LoginActivity.this, "Vui lòng nhập Email", R.style.errorToast).show();
@@ -93,13 +94,23 @@ public class LoginActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         DocumentSnapshot document = task.getResult();
                                         if (document.exists()) {
-                                            String role = document.getString("role");
-                                            if (selectedRole.equals(role)) {
-                                                // Roles match, allow login
-                                                startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                            String role = document.getString("role");// Roles match, allow login
+                                            Log.d("UserRole", "Role from Firestore: " + role);
+                                            Log.d("UserRole", "Selected Role: " + selectedRole);
+                                            if (selectedRole.equals("2")) {
+                                                if ("2".equals(role)) {
+                                                    startActivity(new Intent(LoginActivity.this, MainActivity.class));
+                                                } else {
+                                                    StyleableToast.makeText(LoginActivity.this, "Vai trò không phù hợp", R.style.errorToast).show();
+                                                }
+                                            } else if (selectedRole.equals("1")) {
+                                                if ("1".equals(role)) {
+                                                    startActivity(new Intent(LoginActivity.this, AdminActivity.class));
+                                                } else {
+                                                    StyleableToast.makeText(LoginActivity.this, "Vai trò không phù hợp", R.style.errorToast).show();
+                                                }
                                             } else {
-                                                // Roles do not match, show error message
-                                                StyleableToast.makeText(LoginActivity.this, "Bạn không có quyền truy cập", R.style.errorToast).show();
+                                                StyleableToast.makeText(LoginActivity.this, "Vai trò không hợp lệ", R.style.errorToast).show();
                                             }
                                         } else {
                                             StyleableToast.makeText(LoginActivity.this, "Người dùng không tồn tại", R.style.errorToast).show();
@@ -119,6 +130,7 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
 
         btnGoBack.setOnClickListener(new View.OnClickListener() {
             @Override

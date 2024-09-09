@@ -118,7 +118,8 @@ public class FriendRequestActivity extends AppCompatActivity implements FriendRe
         super.onStart();
         if (adapter != null) {
             adapter.startListening();
-        }
+        } 
+        
     }
 
     @Override

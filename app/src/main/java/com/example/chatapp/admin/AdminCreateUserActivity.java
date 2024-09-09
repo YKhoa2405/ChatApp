@@ -27,7 +27,7 @@ import java.util.Map;
 
 public class AdminCreateUserActivity extends AppCompatActivity {
 
-    private EditText edtUserName, edtEmail, edtPass, edtConfigPass;
+    private EditText edtUserName, edtEmail, edtPass;
     private MaterialButton btnSave;
     private ImageButton btnGoBack;
     private FirebaseAuth auth;
@@ -67,7 +67,6 @@ public class AdminCreateUserActivity extends AppCompatActivity {
         String userName = edtUserName.getText().toString().trim();
         String email = edtEmail.getText().toString().trim();
         String password = edtPass.getText().toString().trim();
-        String configPass = edtConfigPass.getText().toString().trim();
 
         // Validate input
         if (userName.isEmpty()) {
@@ -99,8 +98,9 @@ public class AdminCreateUserActivity extends AppCompatActivity {
         user.put("created_at", System.currentTimeMillis());
         user.put("user_name", userName);
         user.put("avatar", "https://res.cloudinary.com/dsbebvfff/image/upload/v1720890023/user-profile-icon-free-vector_xcepte.jpg");
-        user.put("status", "online");
+        user.put("status", "offline");
         user.put("bio", "null");
+        user.put("role", "2");
 
         db.collection("users") // Replace with your Firestore collection name
                 .document(FirebaseUtil.currentUserUid()) // Use the user's ID as the document ID

@@ -13,15 +13,23 @@
         android:theme="@style/Theme.ChatApp"
         tools:targetApi="31">
         <activity
-<<<<<<< HEAD
+            android:name=".admin.AdminEditUserActivity"
+            android:exported="false" />
+        <activity
             android:name=".admin.AdminCreateUserActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.WelcomeActivity"
-=======
             android:name=".activities.SearchChatActivity"
->>>>>>> 1412c5668f9726731f94f7c5135f8426c2c1f73b
             android:exported="false" />
+        <activity
+            android:name=".activities.WelcomeActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activities.FriendRequestActivity"
             android:exported="false" />
@@ -39,13 +47,7 @@
             android:exported="false" />
         <activity
             android:name=".admin.AdminActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true"></activity>
         <activity
             android:name=".activities.ForgotPassActivity"
             android:exported="false" />

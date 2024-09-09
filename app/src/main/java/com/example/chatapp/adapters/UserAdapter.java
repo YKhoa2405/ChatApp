@@ -1,7 +1,7 @@
 package com.example.chatapp.adapters;
 
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,68 +10,92 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.chatapp.R;
-import com.example.chatapp.activities.ProfileUserActivity;
 import com.example.chatapp.model.SearchUserModel;
-import com.example.chatapp.util.AndroidUtil;
 import com.example.chatapp.util.FirebaseUtil;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+
+import io.github.muddz.styleabletoast.StyleableToast;
 
 public class UserAdapter extends FirestoreRecyclerAdapter<SearchUserModel, UserAdapter.UserViewHolder> {
 
     private final Context context;
+    private final FirebaseUser currentUser;
 
     public UserAdapter(@NonNull FirestoreRecyclerOptions<SearchUserModel> options, Context context) {
         super(options);
         this.context = context;
+        this.currentUser = FirebaseAuth.getInstance().getCurrentUser();
     }
 
     @Override
     protected void onBindViewHolder(@NonNull UserViewHolder holder, int position, @NonNull SearchUserModel model) {
-        holder.txtNameSearch.setText(model.getUser_name());
+        holder.txtNameSearch.setText(model.getUser_name() != null ? model.getUser_name() : "Thông tin không có sẵn");
         holder.txtStatusSearch.setText(model.getEmail());
-        if (model != null && model.getUserId() != null) {
-            if (model.getUserId().equals(FirebaseUtil.currentUserUid())) {
-                holder.txtNameSearch.setText(String.format("%s (Tôi)", model.getUser_name()));
-            } else {
-                holder.txtNameSearch.setText(model.getUser_name());
-            }
-        } else {
-            // Xử lý khi model hoặc model.getUserId() là null, ví dụ:
-            holder.txtNameSearch.setText("Thông tin không có sẵn");
-        }
 
         Glide.with(holder.itemView.getContext())
                 .load(model.getAvatar())
                 .into(holder.imgAvatarSearch);
 
-        if ("online".equals(model.getStatus())) {
-            holder.imgStatus.setVisibility(View.VISIBLE);
-        } else {
-            holder.imgStatus.setVisibility(View.GONE);
-        }
+        holder.imgStatus.setVisibility("online".equals(model.getStatus()) ? View.VISIBLE : View.GONE);
 
-        holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(context, ProfileUserActivity.class);
-            AndroidUtil.passUserModelAsIntent(intent, model);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-        });
-
-        holder.btnEdit.setOnClickListener(v -> {
-            // Handle edit action
-            // Example: Navigate to an edit user activity with user data
-        });
-
-        holder.btnDelete.setOnClickListener(v -> {
-            // Handle delete action
-            // Example: Show a confirmation dialog and delete user
+        holder.btnSetAdmin.setOnClickListener(v -> showAdminConfirmationDialog(model.getUserId()));
+        holder.btnDeleteUserAdmin.setOnClickListener(v -> {
+            if (!model.getUserId().equals(currentUser.getUid())) {
+                showDeleteConfirmationDialog(model.getUserId(), holder.getAdapterPosition());
+            } else {
+                StyleableToast.makeText(context, "Bạn không thể tự xóa tài khoản của mình", R.style.errorToast).show();
+            }
         });
     }
+
+    private void showDeleteConfirmationDialog(String userId, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Xóa vĩnh viễn tài khoản")
+                .setMessage("Tài khoản này sẽ bị xóa vĩnh viễn?")
+                .setPositiveButton("Xóa", (dialog, which) -> deleteUser(userId, position))
+                .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void deleteUser(String userId, int position) {
+        FirebaseUtil.otherUserDetail(userId).delete()
+                .addOnSuccessListener(unused -> {
+                    StyleableToast.makeText(context, "Xóa tài khoản thành công", R.style.successToast).show();
+                })
+                .addOnFailureListener(e -> StyleableToast.makeText(context, "Có lỗi xảy ra, vui lòng thử lại", R.style.errorToast).show());
+    }
+
+    private void showAdminConfirmationDialog(String userId) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle("Thêm quản trị viên")
+                .setMessage("Tài khoản này được thêm là quản trị viên?")
+                .setPositiveButton("Xác nhận", (dialog, which) -> updateUserRole(userId))
+                .setNegativeButton("Hủy", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+    }
+
+    private void updateUserRole(String userId) {
+        FirebaseUtil.otherUserDetail(userId).update("role", "1")
+                .addOnSuccessListener(aVoid -> {
+                    StyleableToast.makeText(context, "Cập nhật thành công", R.style.successToast).show();
+                })
+                .addOnFailureListener(e -> StyleableToast.makeText(context, "Có lỗi xảy ra, vui lòng thử lại: " + e.getMessage(), R.style.errorToast).show());
+    }
+
 
     @NonNull
     @Override
@@ -79,14 +103,11 @@ public class UserAdapter extends FirestoreRecyclerAdapter<SearchUserModel, UserA
         View view = LayoutInflater.from(context).inflate(R.layout.item_user_admin, parent, false);
         return new UserViewHolder(view);
     }
-    public void updateOptions(FirestoreRecyclerOptions<SearchUserModel> newOptions) {
-        super.updateOptions(newOptions);
-        notifyDataSetChanged();
-    }
+
     static class UserViewHolder extends RecyclerView.ViewHolder {
         ImageView imgAvatarSearch, imgStatus;
         TextView txtNameSearch, txtStatusSearch;
-        ImageButton btnEdit, btnDelete;
+        ImageButton btnSetAdmin, btnDeleteUserAdmin;
 
         UserViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -94,8 +115,11 @@ public class UserAdapter extends FirestoreRecyclerAdapter<SearchUserModel, UserA
             txtNameSearch = itemView.findViewById(R.id.txtNameSearch);
             txtStatusSearch = itemView.findViewById(R.id.txtStatusSearch);
             imgStatus = itemView.findViewById(R.id.imgStatus);
-            btnEdit = itemView.findViewById(R.id.btnEdit);
-            btnDelete = itemView.findViewById(R.id.btnDelete);
+            btnSetAdmin = itemView.findViewById(R.id.btnSetAdmin);
+            btnDeleteUserAdmin = itemView.findViewById(R.id.btnDeleteUserAdmin);
         }
     }
+
+
+
 }
